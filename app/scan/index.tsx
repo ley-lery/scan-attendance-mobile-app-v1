@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Alert, BottomSheetModalUi, Button, Icon, Scanning, Text, useDisclosure } from "@/godui";
+import { Alert, BlurCard, BottomSheetModalUi, Button, Icon, Scanning, Text, useDisclosure } from "@/godui";
 import { useGetLocationStore } from "@/stores/useGetLocationStore";
 import { useUserStore } from "@/stores/userStore";
 import soundManager from "@/utils/soundManager";
@@ -560,7 +560,7 @@ const Scan: React.FC = () => {
                 cancelText={t("exit")}
             />
 
-            <View style={styles.container} className="bg-zinc-100 dark:bg-zinc-900">
+            <View style={styles.container} className="bg-zinc-300 dark:bg-zinc-950">
                 {/* ============= Camera View ============= */}
                 <MotiView 
                     from={{ opacity: 1, scale: 1 }}
@@ -573,7 +573,7 @@ const Scan: React.FC = () => {
                     className="flex-1"
                 >
                     {/* Camera Container */}
-                    <View style={StyleSheet.absoluteFillObject} className="bg-zinc-100 dark:bg-zinc-900 items-center justify-center">
+                    <View style={StyleSheet.absoluteFillObject} className="bg-zinc-100 dark:bg-zinc-900 items-center justify-center relative">
                         {/* Scanning Frame */}
                         <MotiView
                             from={{ scale: 0.8, opacity: 0 }}
@@ -703,170 +703,175 @@ const Scan: React.FC = () => {
                     animate={{ opacity: showResults ? 1 : 0, scale: showResults ? 1 : 0.9, translateY: showResults ? 0 : 50 }}
                     transition={{ type: "timing", duration: 600, delay: showResults ? 200 : 0 }}
                     pointerEvents={showResults ? "auto" : "none"}
-                    className="absolute inset-0 flex-1 justify-center items-center px-6 bg-zinc-100 dark:bg-zinc-900"
+                    className="absolute inset-0 flex-1 justify-center items-center px-4  overflow-hidden"
                 >
-                    <View className="w-full bg-white dark:bg-zinc-800/90 backdrop-blur rounded-3xl p-6 shadow-2xl">
-                        {/* Status Icon */}
-                        <View className="items-center mb-6">
-                            <View className={`dark:bg-black bg-zinc-100 dark:shadow-black rounded-2xl p-4 mb-4 dark:shadow-lg`}>
-                                <Scanning 
-                                    size={40}
-                                    strokeWidth={2}
-                                    isLoading={false}
-                                    isFailed={isFailed}
-                                    isSuccess={isSuccess}
-                                    progress={100}
-                                    duration={1000}
-                                    successColor="#4CD964"
-                                    failedColor="#FF6B6B"
-                                />
-                            </View>
-                            
-                            {/* Enhanced Method Badge */}
-                            <View className={`${isSuccess ? 'bg-green-500/10 border-green-500/20' : 'bg-red-500/10 border-red-500/20'} rounded-full px-4 py-2 border mb-2`}>
-                                <Text className={`${isSuccess ? 'text-success' : 'text-dager'} text-sm font-medium`}>
-                                    {scanMethod === 'camera' ? t('cameraScanned') : t('uploadedQR')} • {moment().format('HH:mm:ss')}
-                                </Text>
-                            </View>
-                            
-                            <Text className={`text-2xl font-bold mb-2 ${isSuccess ? 'text-success' : 'text-danger'}`}>
-                                {isSuccess ? t('attendanceRecorded') : t('scanFailed')}
-                            </Text>
-                            
-                            <Text className="text-zinc-500 dark:text-zinc-400 text-center text-base leading-5">
-                                {isSuccess 
-                                    ? t('desc.attendanceSuccess') || 'Your attendance has been recorded successfully'
-                                    : getErrorMessage()
-                                }
-                            </Text>
-                        </View>
+                    <View className="w-full  rounded-3xl overflow-hidden p-0">
+                        <View className="w-80 h-80 bg-theme1-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-3xl"/>
+                        <View className="bg-zinc-300/95 dark:bg-black/85">
+                            <BlurCard intensity={100} className="p-0" radius="sm">
+                                {/* Status Icon */}
+                                <View className="items-center mb-6">
+                                    <View className={`dark:bg-white/5 bg-white/20 dark:shadow-black rounded-2xl p-4 mb-4 dark:shadow-lg`}>
+                                        <Scanning 
+                                            size={40}
+                                            strokeWidth={2}
+                                            isLoading={false}
+                                            isFailed={isFailed}
+                                            isSuccess={isSuccess}
+                                            progress={100}
+                                            duration={1000}
+                                            successColor="#4CD964"
+                                            failedColor="#FF6B6B"
+                                        />
+                                    </View>
+                                    
+                                    {/* Enhanced Method Badge */}
+                                    {/* <View className={`${isSuccess ? 'bg-green-500/10 border-green-500/20' : 'bg-red-500/10 border-red-500/20'} rounded-full px-4 py-2 border mb-2`}>
+                                        <Text className={`${isSuccess ? 'text-success' : 'text-dager'} text-sm font-medium`}>
+                                            {scanMethod === 'camera' ? t('cameraScanned') : t('uploadedQR')} • {moment().format('HH:mm:ss')}
+                                        </Text>
+                                    </View> */}
+                                    
+                                    <Text className={`text-2xl font-bold mb-2 ${isSuccess ? 'text-success' : 'text-danger'}`}>
+                                        {isSuccess ? t('attendanceRecorded') : t('scanFailed')}
+                                    </Text>
+                                    
+                                    <Text className="text-zinc-500 dark:text-zinc-400 text-center text-base leading-5">
+                                        {isSuccess 
+                                            ? t('desc.attendanceSuccess') || 'Your attendance has been recorded successfully'
+                                            : getErrorMessage()
+                                        }
+                                    </Text>
+                                </View>
 
-                        {/* Enhanced Attendance Details (Success Only) */}
-                        {isSuccess && attendanceData && (
-                            <MotiView
-                                from={{ opacity: 0, translateY: 20 }}
-                                animate={{ opacity: 1, translateY: 0 }}
-                                transition={{ type: "timing", duration: 500, delay: 800 }}
-                                className="bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl p-4 mb-6 gap-1"
-                            >
-                                <Text className="text-zinc-700 dark:text-zinc-300 font-normal text-sm mb-3">
-                                    {t('attendanceDetails')}
-                                </Text>
-                                <DetailRow 
-                                    icon="person-outline" 
-                                    label={t('student')} 
-                                    value={attendanceData?.student_name_en || 'N/A'} 
-                                />
-                                <DetailRow 
-                                    icon="book-outline" 
-                                    label={t('subject')} 
-                                    value={attendanceData?.subject || 'N/A'} 
-                                />
-                                <DetailRow 
-                                    icon="calendar-outline" 
-                                    label={t('date')} 
-                                    value={attendanceData?.date || moment().format('YYYY-MM-DD')} 
-                                />
-                                <DetailRow 
-                                    icon="time-outline" 
-                                    label={t('time')} 
-                                    value={attendanceData.time || moment().format('HH:mm:ss')} 
-                                />
-                                <DetailRow 
-                                    icon="location-outline" 
-                                    label={t('session')} 
-                                    value={attendanceData.session ? attendanceData.session.toString() : 'N/A'} 
-                                />
-                                <DetailRow 
-                                    icon="checkmark-circle-outline" 
-                                    label={t('status')} 
-                                    value={attendanceData.status || "Present"} 
-                                    valueColor="#4CD964"
-                                />
-                                <DetailRow 
-                                    icon="scan-outline" 
-                                    label={t('method')} 
-                                    value={attendanceData.scan_method === 'camera' ? t('cameraScanned') : t('uploadedQR')} 
-                                />
-                            </MotiView>
-                        )}
-
-                        {/* Enhanced Error Details (Failed/Error Only) */}
-                        {/* {isFailed && currentError && (
-                            <MotiView
-                                from={{ opacity: 0, translateY: 20 }}
-                                animate={{ opacity: 1, translateY: 0 }}
-                                transition={{ type: "timing", duration: 500, delay: 800 }}
-                                className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-4 mb-6 border border-red-200 dark:border-red-800"
-                            >
-                                <Text className="text-red-700 dark:text-red-300 font-semibold text-lg mb-3">
-                                    {t('errorDetails') || 'Error Details'}
-                                </Text>
-                                
-                                <DetailRow 
-                                    icon="alert-circle-outline" 
-                                    label={t('errorType')} 
-                                    value={currentError.type.toUpperCase()} 
-                                    valueColor="#ef4444"
-                                />
-                                <DetailRow 
-                                    icon="information-circle-outline" 
-                                    label={t('message')} 
-                                    value={currentError.message} 
-                                    valueColor="#ef4444"
-                                />
-                                <DetailRow 
-                                    icon="time-outline" 
-                                    label={t('timestamp')} 
-                                    value={moment().format('YYYY-MM-DD HH:mm:ss')} 
-                                />
-                                
-                                {currentError.details && (
-                                    <DetailRow 
-                                        icon="code-outline" 
-                                        label={t('details')} 
-                                        value={JSON.stringify(currentError.details).substring(0, 50) + '...'} 
-                                        valueColor="#6b7280"
-                                    />
+                                {/* Enhanced Attendance Details (Success Only) */}
+                                {isSuccess && attendanceData && (
+                                    <MotiView
+                                        from={{ opacity: 0, translateY: 20 }}
+                                        animate={{ opacity: 1, translateY: 0 }}
+                                        transition={{ type: "timing", duration: 500, delay: 800 }}
+                                        className=" rounded-2xl p-4 mb-6 gap-2"
+                                    >
+                                        <Text className="text-zinc-700 dark:text-zinc-300 font-normal text-sm mb-3">
+                                            {t('attendanceDetails')}
+                                        </Text>
+                                        <DetailRow 
+                                            icon="person-outline" 
+                                            label={t('student')} 
+                                            value={attendanceData?.student_name_en || 'N/A'} 
+                                        />
+                                        <DetailRow 
+                                            icon="book-outline" 
+                                            label={t('subject')} 
+                                            value={attendanceData?.subject || 'N/A'} 
+                                        />
+                                        <DetailRow 
+                                            icon="calendar-outline" 
+                                            label={t('date')} 
+                                            value={attendanceData?.date || moment().format('YYYY-MM-DD')} 
+                                        />
+                                        <DetailRow 
+                                            icon="time-outline" 
+                                            label={t('time')} 
+                                            value={attendanceData.time || moment().format('HH:mm:ss')} 
+                                        />
+                                        <DetailRow 
+                                            icon="location-outline" 
+                                            label={t('session')} 
+                                            value={attendanceData.session ? attendanceData.session.toString() : 'N/A'} 
+                                        />
+                                        <DetailRow 
+                                            icon="checkmark-circle-outline" 
+                                            label={t('status')} 
+                                            value={attendanceData.status || "Present"} 
+                                            valueColor="#4CD964"
+                                        />
+                                        <DetailRow 
+                                            icon="scan-outline" 
+                                            label={t('method')} 
+                                            value={attendanceData.scan_method === 'camera' ? t('cameraScanned') : t('uploadedQR')} 
+                                        />
+                                    </MotiView>
                                 )}
-                            </MotiView>
-                        )} */}
 
-                        {/* Enhanced Action Buttons */}
-                        <MotiView
-                            from={{ opacity: 0, translateY: 20 }}
-                            animate={{ opacity: 1, translateY: 0 }}
-                            transition={{ type: "timing", duration: 500, delay: 1000 }}
-                            className="flex-row gap-3"
-                        >
-                            {isFailed && (
-                                <>
-                                    <Button
-                                        label={t('tryAgain')}
-                                        startContent={<Icon name="refresh" size={18} color="#fff" />}
-                                        color="primary"
-                                        className="flex-1"
-                                        onPress={handleRetry}
-                                    />
-                                    <Button
-                                        label={t('exit')}
-                                        startContent={<Icon name="arrow-back" size={18} color="#6b7280" />}
-                                        color="secondary"
-                                        className="flex-1"
-                                        onPress={() => router.back()}
-                                    />
-                                </>
-                            )}
-                            
-                            {isSuccess && (
-                                <Button
-                                    label={t('done')}
-                                    color="primary"
-                                    className="flex-1"
-                                    onPress={() => router.back()}
-                                />
-                            )}
-                        </MotiView>
+                                {/* Enhanced Error Details (Failed/Error Only) */}
+                                {/* {isFailed && currentError && (
+                                    <MotiView
+                                        from={{ opacity: 0, translateY: 20 }}
+                                        animate={{ opacity: 1, translateY: 0 }}
+                                        transition={{ type: "timing", duration: 500, delay: 800 }}
+                                        className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-4 mb-6 border border-red-200 dark:border-red-800"
+                                    >
+                                        <Text className="text-red-700 dark:text-red-300 font-semibold text-lg mb-3">
+                                            {t('errorDetails') || 'Error Details'}
+                                        </Text>
+                                        
+                                        <DetailRow 
+                                            icon="alert-circle-outline" 
+                                            label={t('errorType')} 
+                                            value={currentError.type.toUpperCase()} 
+                                            valueColor="#ef4444"
+                                        />
+                                        <DetailRow 
+                                            icon="information-circle-outline" 
+                                            label={t('message')} 
+                                            value={currentError.message} 
+                                            valueColor="#ef4444"
+                                        />
+                                        <DetailRow 
+                                            icon="time-outline" 
+                                            label={t('timestamp')} 
+                                            value={moment().format('YYYY-MM-DD HH:mm:ss')} 
+                                        />
+                                        
+                                        {currentError.details && (
+                                            <DetailRow 
+                                                icon="code-outline" 
+                                                label={t('details')} 
+                                                value={JSON.stringify(currentError.details).substring(0, 50) + '...'} 
+                                                valueColor="#6b7280"
+                                            />
+                                        )}
+                                    </MotiView>
+                                )} */}
+
+                                {/* Enhanced Action Buttons */}
+                                <MotiView
+                                    from={{ opacity: 0, translateY: 20 }}
+                                    animate={{ opacity: 1, translateY: 0 }}
+                                    transition={{ type: "timing", duration: 500, delay: 1000 }}
+                                    className="flex-row gap-3"
+                                >
+                                    {isFailed && (
+                                        <>
+                                            <Button
+                                                label={t('tryAgain')}
+                                                startContent={<Icon name="refresh" size={18} color="#fff" />}
+                                                color="primary"
+                                                className="flex-1"
+                                                onPress={handleRetry}
+                                            />
+                                            <Button
+                                                label={t('exit')}
+                                                startContent={<Icon name="arrow-back" size={18} color="#6b7280" />}
+                                                color="secondary"
+                                                className="flex-1"
+                                                onPress={() => router.back()}
+                                            />
+                                        </>
+                                    )}
+                                    
+                                    {isSuccess && (
+                                        <Button
+                                            label={t('done')}
+                                            color="primary"
+                                            className="flex-1"
+                                            onPress={() => router.back()}
+                                        />
+                                    )}
+                                </MotiView>
+                            </BlurCard>
+                        </View>
                     </View>
                 </MotiView>
             </View>
@@ -953,7 +958,7 @@ const DetailRow: React.FC<{
 }> = ({ icon, label, value, valueColor }) => (
     <View className="flex-row items-center gap-3 border-b border-zinc-200 dark:border-zinc-700 last:border-b-0">
         <View className="flex-row items-center gap-3 flex-1">
-            <View className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 items-center justify-center">
+            <View className="p-2 rounded-lg bg-zinc-100/30 dark:bg-zinc-800/50 items-center justify-center">
                 <Ionicons name={icon as any} size={16} color="#6b7280" />
             </View>
             <Text className="text-zinc-700 dark:text-zinc-200 font-normal text-base">{label}</Text>

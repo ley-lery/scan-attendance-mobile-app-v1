@@ -14,6 +14,7 @@ export { DatePicker } from '@/components/ui/date-picker/DatePicker';
 export { Icon } from '@/components/ui/icon/Icon';
 export { Input } from "@/components/ui/input/Input";
 export { InputPassword } from "@/components/ui/input/InputPassword";
+export { CircleLoading } from '@/components/ui/loadig/CircleLoading';
 export { Loading } from '@/components/ui/loadig/Loading';
 export { Notification } from '@/components/ui/notification/Notification';
 export { OnboardingPagerView } from '@/components/ui/onboarding/OnboardingPagerView';

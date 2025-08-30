@@ -1,12 +1,13 @@
 import i18n from '@/assets/translate/i18n'
 import ButtonSwitch from '@/components/ui/switch-theme/SwitchTheme'
-import { Card, Alert as CustomAlert, Loading, PieChart, Text, useDisclosure } from '@/godui'
+import { Card, Alert as CustomAlert, Loading, PieChart, Text, useDisclosure, useHaptic } from '@/godui'
 import { useThemeStore } from '@/stores/useThemeStore'
 import { useUserStore } from '@/stores/userStore'
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused } from '@react-navigation/native'
+import * as Haptics from 'expo-haptics'
 import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +15,6 @@ import { Image, SafeAreaView, Text as TextNative, TouchableOpacity, View } from 
 import { ScrollView } from 'react-native-gesture-handler'
 import Language from './langauge'
 import Theme from './theme'
-
 
 interface ProfileActionProps {
   icon: React.ReactNode,
@@ -66,6 +66,7 @@ const Profile = () => {
   const { t } = useTranslation();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const isFocused = useIsFocused();
+  const { trigger } = useHaptic();
 
   const bottomSheetRef = React.useRef<BottomSheetModal | null>(null);
   const bottomSheetThemeRef = React.useRef<BottomSheetModal | null>(null);
@@ -92,6 +93,11 @@ const Profile = () => {
     };
     fetchUserData().finally(() => setIsLoading(false));
   }, []);
+
+  const handleLogout = () => {
+    trigger(Haptics.ImpactFeedbackStyle.Light);
+    onOpen();
+  };
 
   const logout = async () => {
     try {
@@ -137,7 +143,7 @@ const Profile = () => {
         confirmText={t("yes")}
         cancelText={t("no")}
       />
-      <SafeAreaView className="flex-1 bg-zinc-200 dark:bg-zinc-900">
+      <SafeAreaView className="flex-1 bg-zinc-100 dark:bg-black/95">
         <ScrollView
           className="flex-1"
           contentContainerStyle={{ paddingBottom: 90, paddingTop: 20, paddingHorizontal: 18 }}
@@ -264,7 +270,7 @@ const Profile = () => {
                 <ProfileAction
                   icon={<Ionicons name="log-out-outline" size={20} color="#f31260" />}
                   label={t("logout")}
-                  onPress={onOpen}
+                  onPress={handleLogout}
                   textColor="text-danger"
                   bg="bg-danger/10"
                   iconColor="#db2777"

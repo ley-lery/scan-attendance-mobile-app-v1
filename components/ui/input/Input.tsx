@@ -131,7 +131,7 @@ export const Input: React.FC<Props > = ({
     // >
       <View className={classNames?.wrapper || className}>
         {label && (
-          <Text className={["mb-1 text-base font-normal", isInvalid ? 'text-danger-600' : `${notDarkMode ? 'text-zinc-300' : 'text-zinc-600 dark:text-zinc-300'}`].join(' ')}>
+          <Text className={["mb-1 text-base font-normal", isInvalid ? 'text-danger-600' : `${notDarkMode ? 'text-zinc-300' : 'text-zinc-600 dark:text-zinc-300'}`, disabledClass].join(' ')}>
             {label}{isRequired && <Text className="text-danger-600"> *</Text>}
           </Text>
         )}

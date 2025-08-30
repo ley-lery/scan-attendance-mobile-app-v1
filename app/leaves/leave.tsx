@@ -253,7 +253,7 @@ const SingleLeave = () => {
           className="justify-center p-4"
         >
           {/* Header Section */}
-          <MotiView from={{ opacity: 0, translateY: -50 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: "spring", damping: 20, stiffness: 200, delay: 100 }} className="mx-4 p-4 rounded-2xl bg-white dark:bg-zinc-800 shadow-lg shadow-zinc-200 dark:shadow-black">
+          <MotiView from={{ opacity: 0, translateY: -50 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: "spring", damping: 20, stiffness: 200, delay: 100 }} className="mx-4 p-4 rounded-2xl bg-white dark:bg-zinc-800 shadow-lg shadow-zinc-200 dark:shadow-black/30">
             <View className="flex-row items-start mb-4">
               <TouchableOpacity
                 onPress={handleGoBack}
@@ -318,6 +318,7 @@ const SingleLeave = () => {
                     value={values.subject}
                     errorMessage={touched.subject && errors.subject ? errors.subject : ''}
                     isInvalid={!!(touched.subject && errors.subject)}
+                    isDisabled={isSubmitting}
                   />
                     <Picker
                       label={t('leaveType')}
@@ -334,6 +335,7 @@ const SingleLeave = () => {
                       placeholder={t('selectLeaveType')}
                       errorMessage={touched.leaveType && errors.leaveType ? errors.leaveType : ''}
                       isInvalid={!!(touched.leaveType && errors.leaveType)}
+                      isDisabled={isSubmitting}
                     />
                     <DatePicker
                       isRequired
@@ -350,6 +352,7 @@ const SingleLeave = () => {
                       minimumDate={new Date()}
                       errorMessage={touched.leaveDate ? (errors.leaveDate as string) : ''}
                       isInvalid={!!(touched.leaveDate && errors.leaveDate)}
+                      isDisabled={isSubmitting}
                     />
 
                     <Input
@@ -366,6 +369,7 @@ const SingleLeave = () => {
                       }}
                       errorMessage={touched.leaveReason && errors.leaveReason ? errors.leaveReason : ''}
                       isInvalid={!!(touched.leaveReason && errors.leaveReason)}
+                      isDisabled={isSubmitting}
                       onFocus={(event) => {
                         scrollToInput(event.target);
                         triggerHaptic();

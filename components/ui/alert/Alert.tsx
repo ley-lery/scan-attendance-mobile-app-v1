@@ -1,7 +1,7 @@
 import { BlurCard, Button } from "@/godui";
 import { MotiView } from 'moti';
 import React from 'react';
-import { Dimensions, Modal, Text, View } from 'react-native';
+import { Dimensions, Modal, Text, useColorScheme, View } from 'react-native';
 
 interface AlertProps {
   visible: boolean;
@@ -26,6 +26,7 @@ export const Alert: React.FC<AlertProps> = ({
   cancelText,
   icon,
 }) => {
+  const colorScheme = useColorScheme();
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <MotiView
@@ -50,7 +51,7 @@ export const Alert: React.FC<AlertProps> = ({
             shadowRadius: 16,
           }}
         >
-          <BlurCard tint="default" radius="xl" classNames={{wrapper: 'bg-black/60 w-full'}}>
+          <BlurCard  intensity={60} tint={colorScheme === 'dark' ? 'light' : 'light'} radius="xl" classNames={{wrapper: 'bg-black/60 w-full'}}>
             <View className="items-center w-full">
               {icon}
               <Text className="text-lg font-semibold text-center mb-2 text-zinc-200 mt-1">{title}</Text>

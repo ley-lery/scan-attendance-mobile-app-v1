@@ -11,12 +11,13 @@ type PickerProps = {
   minimumDate?: Date
   placeholder?: string
   label?: string
-  disabled?: boolean
+  isDisabled?: boolean
   className?: string
   variant?: 'solid' | 'borderred' | 'underline'
   radius?: 'none' | 'sm' | 'md' | 'lg' | 'full'
   size?: 'sm' | 'md' | 'lg'
   isInvalid?: boolean
+
   errorMessage?: string
   isRequired?: boolean
   startContent?: React.ReactNode
@@ -37,7 +38,7 @@ export const DatePicker: React.FC<PickerProps> = ({
   minimumDate,
   placeholder = 'Select a date',
   label,
-  disabled = false,
+  isDisabled = false,
   className = '',
   variant = 'solid',
   radius = 'md',
@@ -96,6 +97,8 @@ export const DatePicker: React.FC<PickerProps> = ({
     top: 'bottom-full',
   }
 
+  const disabledClass = isDisabled ? 'opacity-50 pointer-events-none select-none' : 'opacity-100';
+
   return (
     // <MotiView
     //   from={{ opacity: 0, scale: animation.isFocused ? 1 : 0.9 }}
@@ -104,18 +107,18 @@ export const DatePicker: React.FC<PickerProps> = ({
     // >
       <View className={`w-full ${className}`}>
         {label && (
-          <Text className="mb-1 dark:text-zinc-300 text-zinc-600 text-base">
-            {label}{isRequired && <Text className="text-danger"> *</Text>}
+          <Text className={["mb-1 text-base font-normal", isInvalid ? 'text-danger-600' : 'text-zinc-600 dark:text-zinc-300', disabledClass ].join(' ')}>
+            {label}{isRequired && <Text className="text-red-500"> *</Text>}
           </Text>
         )}
         <TouchableOpacity
           activeOpacity={0.8}
-          disabled={disabled}
+          disabled={isDisabled}
           onPress={() => setOpen(o => !o)}
           className={`
             flex-row items-center justify-between
             ${variantMaps[variant][isInvalid ? 'invalid' : 'default']} ${radiusMaps[radius]} ${sizeMaps[size]}
-            ${disabled ? 'opacity-50' : 'opacity-100'}
+            ${disabledClass}
             ${isInvalid ? 'border-danger' : ''}
           `}
           style={{ minHeight: 48 }}

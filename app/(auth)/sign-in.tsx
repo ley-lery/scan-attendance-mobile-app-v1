@@ -1,9 +1,10 @@
 import { IMG } from '@/constants/Image';
-import { BlurCard, Button, Checkbox, Input, InputPassword, useAuth, useToast } from '@/godui';
+import { BlurCard, Button, Checkbox, Input, InputPassword, useAuth, useHaptic, useToast } from '@/godui';
 import { useUserStore } from '@/stores/userStore';
 import { useThemeStore } from '@/stores/useThemeStore';
 import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
+import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Formik } from 'formik';
@@ -13,37 +14,25 @@ import { Image, Platform, SafeAreaView, Text, TouchableOpacity, View } from 'rea
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as Yup from 'yup';
 
-const userFixed = {
-  id: 1,
-  user_code: "SR112233",
-  avatar: "https://i.pravatar.cc/400?img=68",
-  name: "Ley Lery",
-  email: "leryley8@gmail.com",
-  phone: "0123456789",
-  room: "Room 101",
-  year: 4,
-  semester: 1,
-  major: "Computer Science",
-  is_scanned: 0,
-};
-
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email format').required('Email is required'),
   password: Yup.string().min(1, 'Password must be at least 1 characters').required('Password is required'),
 });
 
 const SignIn = () => {
-  
+  const { trigger } = useHaptic();
   const { show } = useToast();
   const { login } = useAuth();
   const theme = useThemeStore((state) => state.theme);
   const isFocused = useIsFocused();
   const [remember, setRemember] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
   const setUser = useUserStore((state) => state.setusers);
 
   const handleSignIn = async (values: any) => {
     try {
+      trigger(Haptics.ImpactFeedbackStyle.Light);
       setSubmitting(true);
       const response: any = await login(values.email, values.password);
       console.log(JSON.stringify(response, null, 2), "response");
@@ -51,6 +40,7 @@ const SignIn = () => {
       if (response.success) {
         setTimeout(() => {
           show({ type: 'success', title: 'Signed in', message: 'Welcome back!', position: 'top', duration: 500 });
+          trigger(Haptics.ImpactFeedbackStyle.Light);
           setSubmitting(false);
           setUser(response.user);
         }, 500);
@@ -61,6 +51,7 @@ const SignIn = () => {
       } else {
         setTimeout(() => {
           show({ type: 'error', title: 'Sign in failed', message: response.error, position: 'top', duration: 2500 });
+          trigger(Haptics.ImpactFeedbackStyle.Light);
           setSubmitting(false);
         }, 1000);
       }
@@ -141,6 +132,7 @@ const SignIn = () => {
                         errorMessage={touched.email && errors.email ? errors.email : ''} 
                         isDisabled={submitting}
                         notDarkMode
+                        
                       /> 
                     </MotiView> 
                     <MotiView 

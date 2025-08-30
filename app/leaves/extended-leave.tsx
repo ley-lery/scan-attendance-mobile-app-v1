@@ -224,7 +224,7 @@ const ExtendedLeave = () => {
               from={{ opacity: 0, translateY: -50 }}
               animate={{ opacity: 1, translateY: 0 }}
               transition={{ type: "spring", damping: 20, stiffness: 200, delay: 100 }}
-              className="mx-4 p-4 rounded-2xl bg-white dark:bg-zinc-800 shadow-lg shadow-zinc-200 dark:shadow-black/50"
+              className="mx-4 p-4 rounded-2xl bg-white dark:bg-zinc-800 shadow-lg shadow-zinc-200 dark:shadow-black/30"
             >
               <View className="flex-row items-start mb-4">
                 <TouchableOpacity
@@ -273,22 +273,23 @@ const ExtendedLeave = () => {
 
                   return (
                     <View className="gap-4">
-                        <Picker
-                          label={t('leaveType')}
-                          isRequired
-                          variant="solid"
-                          size="md"
-                          startContent={<Icon name="document-text" size={20} color="#a1a1aa" />}
-                          placeholder={t('selectLeaveType')}
-                          onChange={(value) => {
-                            setFieldValue('leaveType', value);
-                            trigger();
-                          }}
-                          options={leaveTypes}
-                          value={values.leaveType}
-                          errorMessage={touched.leaveType && errors.leaveType ? errors.leaveType : ''}
-                          isInvalid={!!(touched.leaveType && errors.leaveType)}
-                        />
+                      <Picker
+                        label={t('leaveType')}
+                        isRequired
+                        variant="solid"
+                        size="md"
+                        startContent={<Icon name="document-text" size={20} color="#a1a1aa" />}
+                        placeholder={t('selectLeaveType')}
+                        onChange={(value) => {
+                          setFieldValue('leaveType', value);
+                          trigger();
+                        }}
+                        options={leaveTypes}
+                        value={values.leaveType}
+                        errorMessage={touched.leaveType && errors.leaveType ? errors.leaveType : ''}
+                        isInvalid={!!(touched.leaveType && errors.leaveType)}
+                        isDisabled={isSubmitting}
+                      />
 
                       {/* Date Range Section */}
                       <View className="bg-zinc-50 dark:bg-zinc-800/50 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800">
@@ -317,6 +318,7 @@ const ExtendedLeave = () => {
                               startContent={<Icon name="calendar" size={20} color="#a1a1aa" />}
                               errorMessage={touched.startDate ? (errors.startDate as string) : ''}
                               isInvalid={!!(touched.startDate && errors.startDate)} 
+                              isDisabled={isSubmitting}
                             />
 
                           {/* End Date */}
@@ -335,6 +337,7 @@ const ExtendedLeave = () => {
                               startContent={<Icon name="calendar" size={20} color="#a1a1aa" />} 
                               errorMessage={touched.endDate ? (errors.endDate as string) : ''}
                               isInvalid={!!(touched.endDate && errors.endDate)} 
+                              isDisabled={isSubmitting}
                             />
 
                           {/* Days Summary */}
@@ -354,6 +357,7 @@ const ExtendedLeave = () => {
                                 startContent={<Icon name="calendar" size={18} color="#a1a1aa" />}
                                 errorMessage={touched.numberOfDays ? (errors.numberOfDays as string) : ''}
                                 isInvalid={!!(touched.numberOfDays && errors.numberOfDays)} 
+                                isDisabled={isSubmitting}
                               />
                             </View>
                             <View className="flex-1">
@@ -368,6 +372,7 @@ const ExtendedLeave = () => {
                                 isClearable={false} 
                                 errorMessage={touched.numberOfDays ? (errors.numberOfDays as string) : ''}
                                 isInvalid={!!(touched.numberOfDays && errors.numberOfDays)} 
+                                isDisabled={isSubmitting}
                               />
                             </View>
                           </View>
@@ -387,6 +392,7 @@ const ExtendedLeave = () => {
                           errorMessage={touched.reason && errors.reason ? errors.reason : ''}
                           isInvalid={!!(touched.reason && errors.reason)}
                           onFocus={(event) => { scrollToInput(event.target); trigger() }}
+                          isDisabled={isSubmitting}
                         />
                         <Button 
                           label={submitting ? t('submittingRequest') : t('submitRequest')} 

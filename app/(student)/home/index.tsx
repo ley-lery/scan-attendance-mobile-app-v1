@@ -161,7 +161,7 @@ const Home = () => {
         {notiData.map((notif) => notificationsRows(notif))}
       </View>
     </Notification>
-      <View className='flex-1 bg-zinc-100 dark:bg-zinc-900'>
+      <View className='flex-1 bg-zinc-50 dark:bg-zinc-900'>
         <MotiView
           from={{ opacity: 0, translateY: -10 }}
           animate={{ opacity: 1, translateY: 0 }}
@@ -169,7 +169,7 @@ const Home = () => {
           className="absolute top-0 left-0 right-0 z-10"
         >
           <BlurCard
-            intensity={themeColor === 'dark' ? 100 : 50}
+            intensity={themeColor === 'dark' ? 90 : 100}
             tint="default"
             radius="2xl"
             placementRadius="bottom-left"

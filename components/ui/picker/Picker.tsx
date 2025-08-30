@@ -27,6 +27,7 @@ type PickerProps = {
   endContent?: React.ReactNode
   placement?: 'bottom' | 'top'
   isClearable?: boolean,
+  isDisabled?: boolean,
   classNames?: {
     wrapper?: string;
     input?: string;
@@ -52,6 +53,7 @@ export const Picker: React.FC<PickerProps> = ({
   endContent,
   placement = 'bottom',
   isClearable = true,
+  isDisabled = false,
   classNames
 }) => {
   const [open, setOpen] = useState(false)
@@ -111,11 +113,13 @@ export const Picker: React.FC<PickerProps> = ({
     bottom: 'top-full',
     top: 'bottom-full',
   }
+  
+  const disabledClass = isDisabled ? 'opacity-50 pointer-events-none select-none' : 'opacity-100';
 
   return (
     <View className={`w-full ${classNames?.wrapper || className}`}>
       {label && (
-        <Text className={["mb-1 text-base font-normal", isInvalid ? 'text-danger-600' : 'text-zinc-600 dark:text-zinc-300'].join(' ')}>
+        <Text className={["mb-1 text-base font-normal", isInvalid ? 'text-danger-600' : 'text-zinc-600 dark:text-zinc-300', disabledClass ].join(' ')}>
           {label}{isRequired && <Text className="text-red-500"> *</Text>}
         </Text>
       )}
@@ -127,7 +131,7 @@ export const Picker: React.FC<PickerProps> = ({
           flex-row items-center justify-between
           ${variantMaps[variant][isInvalid ? 'invalid' : 'default']} 
           ${radiusMaps[radius]} ${sizeMaps[size].size}
-          ${disabled ? 'opacity-50' : 'opacity-100'}
+          ${disabledClass}
         `}
         style={{ minHeight: 48 }}
       >
