@@ -35,7 +35,7 @@ const MOCK_USERS: Record<string, { password: string; user: User }> = {
             role: "student",
             department: "Computer Science",
             is_scanned: 0,
-            student_code: "SR2244466d",
+            student_code: "SR2244466",
         },
     },
     "lecturer@university.edu": {

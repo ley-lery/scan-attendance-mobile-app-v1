@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Alert, BlurCard, BottomSheetModalUi, Button, Icon, Scanning, Text, useDisclosure } from "@/godui";
+import { Alert, BlurCard, BottomSheetModalUi, Button, CircleLoading, Icon, Scanning, Text, useDisclosure } from "@/godui";
 import { useGetLocationStore } from "@/stores/useGetLocationStore";
 import { useUserStore } from "@/stores/userStore";
 import soundManager from "@/utils/soundManager";
@@ -18,12 +18,12 @@ import { ApiError, AttendanceApiService } from "./service/api";
 
 const SCHOOL_LOCATION = {
     // work location
-    latitude: 13.369507133489616,
-    longitude: 103.8658975460337,
+    // latitude: 13.369507133489616,
+    // longitude: 103.8658975460337,
 
     // home location
-    // latitude : 13.353555915704485, 
-    // longitude : 104.00318244982763
+    latitude : 13.353555915704485, 
+    longitude : 104.00318244982763
 };
 
 const MAX_DISTANCE_METERS = 50;
@@ -32,21 +32,6 @@ const MAX_DISTANCE_METERS = 50;
 type ScanState = 'idle' | 'scanning' | 'processing' | 'success' | 'failed' | 'error';
 type ScanMethod = 'camera';
 
-
-
-// ============= Enhanced Sound Configuration =============
-const SOUND_CONFIG = {
-    success: {
-        file: require("../../assets/sounds/success-chime.mp3"),
-        volume: 0.8,
-        description: "Success chime for attendance recorded"
-    },
-    failed: {
-        file: require("../../assets/sounds/error-beep.mp3"),
-        volume: 0.5,
-        description: "Error buzz for failed scans"
-    },
-};
 
 // ============= Utility function =============
 const getDistanceInMeters = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -346,7 +331,7 @@ const Scan: React.FC = () => {
                 // Auto-dismiss bottom sheets and show results after delay
                 setTimeout(() => {
                     bottomSheetRef.current?.dismiss();
-                }, 1500);
+                }, 2500);
                 break;
         }
     }, [scanState, scanMethod]);
@@ -707,12 +692,17 @@ const Scan: React.FC = () => {
                 >
                     <View className="w-full  rounded-3xl overflow-hidden p-0">
                         <View className="w-80 h-80 bg-theme1-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-3xl"/>
-                        <View className="bg-zinc-300/95 dark:bg-black/85">
+                        <View className="bg-zinc-300/95 dark:bg-zinc-600/90">
                             <BlurCard intensity={100} className="p-0" radius="sm">
-                                {/* Status Icon */}
-                                <View className="items-center mb-6">
+                                <MotiView
+                                    from={{ opacity: 0, scale: showResults ? 1 : 0.9 }}
+                                    animate={{ opacity: showResults ? 1 : 0, scale: showResults ? 1 : 0.9 }}
+                                    transition={{ type: "timing", duration: 500, delay: 600 }}
+                                    className="rounded-2xl p-4 mb-6 gap-2 items-center"
+                                >
+                                    {/* Status Icon */}
                                     <View className={`dark:bg-white/5 bg-white/20 dark:shadow-black rounded-2xl p-4 mb-4 dark:shadow-lg`}>
-                                        <Scanning 
+                                        {/* <Scanning 
                                             size={40}
                                             strokeWidth={2}
                                             isLoading={false}
@@ -722,7 +712,8 @@ const Scan: React.FC = () => {
                                             duration={1000}
                                             successColor="#4CD964"
                                             failedColor="#FF6B6B"
-                                        />
+                                        /> */}
+                                        <CircleLoading isSuccess={isSuccess} size={50}/>
                                     </View>
                                     
                                     {/* Enhanced Method Badge */}
@@ -742,8 +733,7 @@ const Scan: React.FC = () => {
                                             : getErrorMessage()
                                         }
                                     </Text>
-                                </View>
-
+                                </MotiView>
                                 {/* Enhanced Attendance Details (Success Only) */}
                                 {isSuccess && attendanceData && (
                                     <MotiView
@@ -837,8 +827,8 @@ const Scan: React.FC = () => {
 
                                 {/* Enhanced Action Buttons */}
                                 <MotiView
-                                    from={{ opacity: 0, translateY: 20 }}
-                                    animate={{ opacity: 1, translateY: 0 }}
+                                    from={{ opacity: 0, scale: showResults ? 1 : 0.9 }}
+                                    animate={{ opacity: showResults ? 1 : 0, scale: showResults ? 1 : 0.9 }}
                                     transition={{ type: "timing", duration: 500, delay: 1000 }}
                                     className="flex-row gap-3"
                                 >

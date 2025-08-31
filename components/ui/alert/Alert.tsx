@@ -51,7 +51,7 @@ export const Alert: React.FC<AlertProps> = ({
             shadowRadius: 16,
           }}
         >
-          <BlurCard  intensity={60} tint={colorScheme === 'dark' ? 'light' : 'light'} radius="xl" classNames={{wrapper: 'bg-black/60 w-full'}}>
+          <BlurCard  intensity={60} tint={colorScheme === 'dark' ? 'light' : 'light'} radius="xl" classNames={{wrapper: ' w-full'}}>
             <View className="items-center w-full">
               {icon}
               <Text className="text-lg font-semibold text-center mb-2 text-zinc-200 mt-1">{title}</Text>

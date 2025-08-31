@@ -1,5 +1,4 @@
 import { Button, DatePicker, Icon, Input, Picker, Text, useHaptic, useToast } from "@/godui";
-import soundManager from "@/utils/soundManager";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from 'expo-haptics';
 import { Formik } from "formik";
@@ -142,7 +141,6 @@ const ExtendedLeave = () => {
       
       // Success feedback
       setTimeout(() => {
-        soundManager.play('success');
         setIsSuccess(true);
       }, 600);
       trigger(Haptics.ImpactFeedbackStyle.Heavy);
@@ -154,7 +152,6 @@ const ExtendedLeave = () => {
       setFormikSubmitting(false);
       
       // Error feedback
-      soundManager.play('failed');
       trigger(Haptics.ImpactFeedbackStyle.Heavy);
       
       show({ title: t('error'), message: t('leaveRequestFailed'), type: 'error' });

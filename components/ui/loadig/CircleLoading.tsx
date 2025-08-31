@@ -1,12 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
+import { MotiView } from 'moti';
 import React, { useEffect, useRef } from 'react';
 import { Animated as RNAnimated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, {
-    Easing,
-    runOnJS,
-    useAnimatedProps,
-    useSharedValue,
-    withTiming,
+  Easing,
+  runOnJS,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
@@ -48,7 +49,8 @@ export function CircleLoading({
   // Spinning animation for loading state
   const spinValue = useRef(new RNAnimated.Value(0)).current;
   const spinAnimation = useRef<RNAnimated.CompositeAnimation | null>(null);
-  
+  const [iconVisible, setIconVisible] = React.useState(false);
+
   // Progress animation for success/failed state
   const animatedProgress = useSharedValue(0);
   const animatedStroke = useSharedValue(color);
@@ -105,23 +107,14 @@ export function CircleLoading({
       
       // Start progress animation
       animatedProgress.value = withTiming(
-        progress, 
-        { 
-          duration, 
-          easing: Easing.out(Easing.cubic) 
-        }, 
+        progress,
+        { duration, easing: Easing.out(Easing.cubic) },
         (finished) => {
           if (finished) {
-            // Change color and show icon
-            animatedStroke.value = withTiming(targetColor, { 
-              duration: 300 
-            }, (colorFinished) => {
+            animatedStroke.value = withTiming(targetColor, { duration: 300 }, (colorFinished) => {
               if (colorFinished) {
-                showIcon.value = true;
-                // Call completion callback
-                if (onAnimationComplete) {
-                  runOnJS(onAnimationComplete)();
-                }
+                runOnJS(setIconVisible)(true); // React state update triggers re-render
+                if (onAnimationComplete) runOnJS(onAnimationComplete)();
               }
             });
           }
@@ -146,9 +139,9 @@ export function CircleLoading({
   }));
 
   const getIconName = () => {
-    if (isFailed) return 'close-circle-outline';
-    if (isSuccess) return 'checkmark-circle-outline';
-    return 'checkmark-circle-outline';
+    if (isFailed) return 'close-outline';
+    if (isSuccess) return 'checkmark-outline';
+    return 'checkmark-outline';
   };
 
   const getIconColor = () => {
@@ -205,15 +198,19 @@ export function CircleLoading({
           </Svg>
           
           {/* Icon - only show when animation is complete */}
-          {showIcon.value && (isSuccess || isFailed) && (
-            <Animated.View style={styles.iconContainer}>
-              <Ionicons 
-                name={getIconName()} 
-                size={size / 2.2} 
-                color={getIconColor()}
-                style={styles.icon} 
-              />
-            </Animated.View>
+          {iconVisible && (isSuccess || isFailed) && (
+            <MotiView
+              from={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', damping: 10, stiffness: 200 }}
+              className='absolute'
+            >
+                <Ionicons 
+                  name={getIconName()} 
+                  size={size / 2.2} 
+                  color={getIconColor()} 
+                />
+            </MotiView>
           )}
         </>
       )}

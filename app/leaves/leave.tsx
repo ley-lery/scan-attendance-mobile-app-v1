@@ -1,11 +1,10 @@
 import { Button, DatePicker, Icon, Input, Picker, Scanning, Text, useToast } from "@/godui";
 import { Ionicons } from "@expo/vector-icons";
-import { Audio } from "expo-av";
 import * as Haptics from 'expo-haptics';
 import { Formik } from "formik";
 import moment from "moment";
 import { MotiView } from "moti";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, Platform, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -83,52 +82,9 @@ const SingleLeave = () => {
   const [submittedData, setSubmittedData] = useState<any>(null);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
-  // Enhanced Sound System
-  const sounds = useRef<{ [key: string]: Audio.Sound }>({});
-  const soundLoaded = useRef<{ [key: string]: boolean }>({});
-  
   // Scroll and focus management
   const scrollRef = useRef<KeyboardAwareScrollView>(null);
   const formikRef = useRef<any>(null);
-
-  // Load sounds on component mount
-  useEffect(() => {
-    loadSounds();
-    return () => {
-      // Cleanup sounds
-      Object.values(sounds.current).forEach(sound => {
-        sound.unloadAsync().catch(() => {});
-      });
-    };
-  }, []);
-
-  // Enhanced Sound Management
-  const loadSounds = async () => {
-    try {
-      for (const [soundName, config] of Object.entries(SOUND_CONFIG)) {
-        const sound = new Audio.Sound();
-        await sound.loadAsync(config.file);
-        await sound.setVolumeAsync(config.volume);
-        sounds.current[soundName] = sound;
-        soundLoaded.current[soundName] = true;
-      }
-    } catch (error) {
-      console.warn("Failed to load sounds:", error);
-    }
-  };
-
-  const playSound = async (soundName: keyof typeof SOUND_CONFIG) => {
-    if (!soundLoaded.current[soundName]) return;
-    
-    try {
-      const sound = sounds.current[soundName];
-      if (sound) {
-        await sound.replayAsync();
-      }
-    } catch (error) {
-      console.warn(`Failed to play ${soundName} sound:`, error);
-    }
-  };
 
   const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
     if (Platform.OS !== 'web') {
@@ -176,7 +132,6 @@ const SingleLeave = () => {
       setFormikSubmitting(false);
       
       // Success feedback
-      playSound('success');
       triggerHaptic(Haptics.ImpactFeedbackStyle.Heavy);
       
       show({
@@ -190,7 +145,6 @@ const SingleLeave = () => {
       setFormikSubmitting(false);
       
       // Error feedback
-      playSound('failed');
       triggerHaptic(Haptics.ImpactFeedbackStyle.Heavy);
       
       setFormErrors([t('leaveRequestFailed')]);
