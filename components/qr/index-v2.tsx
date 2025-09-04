@@ -5,7 +5,7 @@ import { useUserStore } from "@/stores/userStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useIsFocused } from "@react-navigation/native";
-import { Audio } from "expo-av";
+import { useAudioPlayer } from "expo-audio";
 import { CameraView, PermissionStatus, useCameraPermissions } from "expo-camera";
 import * as Haptics from 'expo-haptics';
 import { router } from "expo-router";
@@ -66,9 +66,10 @@ const Scan: React.FC = () => {
     const [zoom, setZoom] = useState(0);
     const [flashEnabled, setFlashEnabled] = useState(false);
     
-    const scanSound = useRef<Audio.Sound | null>(null);
-    const successSound = useRef<Audio.Sound | null>(null);
-    const failedSound = useRef<Audio.Sound | null>(null);
+    // ============= Audio Players =============
+    const scanSoundPlayer = useAudioPlayer(require("../../assets/sounds/success-chime.mp3"));
+    const successSoundPlayer = useAudioPlayer(require("../../assets/sounds/success-chime.mp3"));
+    const failedSoundPlayer = useAudioPlayer(require("../../assets/sounds/success-chime.mp3"));
     
     const qrLock = useRef(false);
     const processingTimeout = useRef<NodeJS.Timeout>(null);
@@ -83,40 +84,24 @@ const Scan: React.FC = () => {
 
 
     const playSound = (sound: "scanning" | "success" | "failed") => {
-        switch (sound) {
-            case 'scanning':
-                scanSound.current?.playAsync();
-                break;
-            case 'success':
-                successSound.current?.playAsync();
-                break;
-            case 'failed':
-                failedSound.current?.playAsync();
-                break;
-            default:
-                break;
+        try {
+            switch (sound) {
+                case 'scanning':
+                    scanSoundPlayer.play();
+                    break;
+                case 'success':
+                    successSoundPlayer.play();
+                    break;
+                case 'failed':
+                    failedSoundPlayer.play();
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            console.error('Error playing sound:', error);
         }
     }
-
-
-    const loadSounds = async () => {
-        scanSound.current = new Audio.Sound();
-        successSound.current = new Audio.Sound();
-        failedSound.current = new Audio.Sound();
-    
-        await scanSound.current.loadAsync(require("../../assets/sounds/success-chime.mp3"));
-        await successSound.current.loadAsync(require("../../assets/sounds/success-chime.mp3"));
-        await failedSound.current.loadAsync(require("../../assets/sounds/success-chime.mp3"));
-    };
-
-    useEffect(() => {
-        loadSounds();
-        return () => {
-            scanSound.current?.unloadAsync();
-            successSound.current?.unloadAsync();
-            failedSound.current?.unloadAsync();
-        };
-    }, []);
 
 
     // ============= Effect: Validate location and user scanning status =============

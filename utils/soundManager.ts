@@ -1,45 +1,51 @@
-import { Audio } from 'expo-av';
+import { useAudioPlayer } from 'expo-audio';
 
-class SoundManager {
-  private static instance: SoundManager;
-  private sounds: { [key: string]: Audio.Sound } = {};
+// Since expo-audio uses hooks, we'll create a simpler approach
+// This will be used as a utility function rather than a class
 
-  private constructor() {}
+const soundFiles = {
+  failed: require('../assets/sounds/error-beep.mp3'),
+  success: require('../assets/sounds/success-chime.mp3'),
+  error: require('../assets/sounds/error-beep.mp3'),
+};
 
-  public static getInstance(): SoundManager {
-    if (!SoundManager.instance) {
-      SoundManager.instance = new SoundManager();
+// Create a hook-based sound manager
+export const useSoundManager = () => {
+  const failedPlayer = useAudioPlayer(soundFiles.failed);
+  const successPlayer = useAudioPlayer(soundFiles.success);
+  const errorPlayer = useAudioPlayer(soundFiles.error);
+
+  const play = (key: 'success' | 'error' | 'failed') => {
+    try {
+      switch (key) {
+        case 'success':
+          successPlayer.seekTo(0);
+          successPlayer.play();
+          break;
+        case 'error':
+          errorPlayer.seekTo(0);
+          errorPlayer.play();
+          break;
+        case 'failed':
+          failedPlayer.seekTo(0);
+          failedPlayer.play();
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error('Error playing sound:', error);
     }
-    return SoundManager.instance;
-  }
+  };
 
-  // Preload all sounds
-  public async preloadSounds() {
-    const failed = new Audio.Sound();
-    const success = new Audio.Sound();
-    const error = new Audio.Sound();
 
-    await failed.loadAsync(require('../assets/sounds/error-beep.mp3'));
-    await success.loadAsync(require('../assets/sounds/success-chime.mp3'));
-    await error.loadAsync(require('../assets/sounds/error-beep.mp3'));
+  return { play };
+};
 
-    this.sounds = { failed, success, error };
-  }
+// For backward compatibility, create a simple function-based approach
+export const playSound = (key: 'success' | 'error' | 'failed') => {
+  console.warn('playSound function is deprecated. Use useSoundManager hook instead.');
+};
 
-  // Play a sound by key
-  public async play(key: 'success' | 'error' | 'failed') {
-    const sound = this.sounds[key];
-    if (sound) {
-      await sound.replayAsync(); // resets and plays
-    }
-  }
-
-  // Optionally unload sounds to free memory
-  public async unloadAll() {
-    for (const key in this.sounds) {
-      await this.sounds[key].unloadAsync();
-    }
-  }
-}
-
-export default SoundManager.getInstance();
+// Default export for backward compatibility
+export default { useSoundManager, playSound };

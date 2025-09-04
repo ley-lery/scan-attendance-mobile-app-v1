@@ -3,6 +3,7 @@ export { Text } from '@/components/tag/Text';
 export { Typography } from '@/components/typography/Typography';
 export { Alert } from '@/components/ui/alert/Alert';
 export { Content } from '@/components/ui/animation/Content';
+export { Avatar } from '@/components/ui/avatar/Avatar';
 export { Badge } from '@/components/ui/badge/Badge';
 export { BottomSheetModalUi } from '@/components/ui/bottom-sheet/BottomSheetModal';
 export { Button } from "@/components/ui/button/Button";

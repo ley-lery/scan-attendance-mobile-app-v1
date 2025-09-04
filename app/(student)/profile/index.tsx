@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused } from '@react-navigation/native'
 import * as Haptics from 'expo-haptics'
 import { router } from 'expo-router'
+import { MotiView } from 'moti'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, SafeAreaView, Text as TextNative, TouchableOpacity, View } from 'react-native'
@@ -65,8 +66,8 @@ const ProfileAction = ({
 const Profile = () => {
   const { t } = useTranslation();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const isFocused = useIsFocused();
   const { trigger } = useHaptic();
+  const isFocused = useIsFocused();
 
   const bottomSheetRef = React.useRef<BottomSheetModal | null>(null);
   const bottomSheetThemeRef = React.useRef<BottomSheetModal | null>(null);
@@ -144,140 +145,144 @@ const Profile = () => {
         cancelText={t("no")}
       />
       <SafeAreaView className="flex-1 bg-zinc-100 dark:bg-black/95">
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ paddingBottom: 90, paddingTop: 20, paddingHorizontal: 18 }}
-          showsVerticalScrollIndicator={false}
+        <MotiView
+          from={{ opacity: 0, scale: isFocused ? 1 : 0.98 }}
+          animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.98 }}
+          transition={{ type: 'timing', duration: 200, delay: 0 }}
+          className='flex-1 bg-zinc-100 dark:bg-black/95'
         >
-          {/* Profile Card */}
-          <Card animation={{ delay: 100, isFocused: isFocused }} radius='xl' classNames={{wrapper: 'p-4 '}} isShadow>
-            {/* <TouchableOpacity className="absolute right-5 top-5 z-10">
-              <Ionicons name="settings-outline" size={22} color="#a1a1aa" />
-            </TouchableOpacity> */}
-
-            <View className="flex-row items-center  rounded-2xl">
-              <View className="mr-5">
-                <Image
-                  source={{ uri: user?.avatar }}
-                  className={[
-                    "w-20 h-20 rounded-full border-4",
-                    theme === "1" ? "border-theme1-primary" : "border-theme2-primary",
-                  ].join(" ")}
-                  style={{ backgroundColor: "#222" }}
-                />
-              </View>
-              <View className="flex-1">
-                <TextNative className="text-zinc-900 dark:text-white text-xl font-bold mb-1">{user?.name}</TextNative>
-                <View className="flex-row items-center mb-1">
-                  <Ionicons name="person-circle-outline" size={16} color="#a1a1aa" />
-                  <TextNative className="text-zinc-400 text-sm ml-1">{user?.user_code}</TextNative>
-                </View>
-                <View className="flex-row items-center">
-                  <MaterialCommunityIcons name="email-outline" size={16} color="#a1a1aa" />
-                  <TextNative className="text-zinc-400 text-sm ml-1">{user?.email || "student@email.com"}</TextNative>
-                </View>
-              </View>
-            </View>
-          </Card>
-
-          {/* Info Section */}
-          <Card radius="lg" animation={{ delay: 150, isFocused: isFocused }} classNames={{wrapper: 'my-4 bg-black'}}>
-              <Text className={[
-                "text-xs font-semibold mb-2 uppercase tracking-widest",
-                theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
-              ].join(" ")}>
-                {t("profileInformation")}
-              </Text>
-              <ProfileInfoRow
-                icon={<Ionicons name="school-outline" size={20} color="#f31260" />}
-                label={t("major")}
-                value={user?.major || t("notAvailable")}
-              />
-              <ProfileInfoRow
-                icon={<Feather name="calendar" size={20} color="#f59e42" />}
-                label={t("year")}
-                value={user?.year || t("notAvailable")}
-              />
-              <ProfileInfoRow
-                icon={<Ionicons name="call-outline" size={20} color="#38bdf8" />}
-                label={t("phone")}
-                value={user?.phone || t("notAvailable")}
-              />
-          </Card>
-
-          {/* Pie Chart / Stats */}
-          <Card radius="lg" animation={{ delay: 200, isFocused: isFocused }} classNames={{wrapper: 'mb-4 bg-black'}}>
-              <Text className={[
-                "text-xs font-semibold mb-2 uppercase tracking-widest",
-                theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
-              ].join(" ")}>
-                {t("overview")}
-              </Text>
-              <PieChart />
-          </Card>
-
-          {/* Account Settings */}
-          <Card radius="lg" animation={{ delay: 250, isFocused: isFocused }} classNames={{wrapper: 'mb-4 bg-black'}} >
-              <Text className={[
-                "text-xs font-semibold mb-2 uppercase tracking-widest",
-                theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
-              ].join(" ")}>
-                {t("accountSettings")}
-              </Text>
-              <View className="gap-2">
-                <ProfileAction
-                  icon={<Ionicons name="key-outline" size={20} color="#f59e42" />}
-                  label={t("changePassword")}
-                  onPress={() => {}}
-                  textColor="text-zinc-400"
-                  bg="bg-zinc-900/60"
-                />
-                <View className="flex-row items-center justify-between dark:bg-zinc-900 bg-zinc-100 rounded-full py-2 pl-4 pr-2">
-                  <View className="flex-row items-center gap-4">
-                    <Ionicons name="moon-outline" size={20} color="#a1a1aa" />
-                    <Text className="text-zinc-600 dark:text-zinc-200 text-base">{t("darkMode")}</Text>
-                  </View>
-                  <ButtonSwitch />
-                </View>
-                <ProfileAction
-                  icon={<MaterialCommunityIcons name="theme-light-dark" size={24} color={theme === "1" ? "#db2777" : "#006FEE"} />}
-                  label={t("changeTheme")}
-                  onPress={() => bottomSheetThemeRef.current?.present()}
-                  textColor="text-zinc-200"
-                  bg="bg-zinc-900/60"
-                />
-                <ProfileAction
-                  icon={<Ionicons name="language-outline" size={20} color="#38bdf8" />}
-                  label={t("changeLanguage")}
-                  onPress={() => bottomSheetRef.current?.present()}
-                  textColor="text-zinc-200"
-                  bg="bg-zinc-900/60"
-                />
-                <ProfileAction
-                  icon={<Ionicons name="person-circle-outline" size={24} color="#a1a1aa" />}
-                  label={t("contactAdmin")}
-                  onPress={() => router.push("../../student-stack/profile/contact")}
-                  textColor="text-zinc-200"
-                  bg="bg-zinc-900/60"
-                />
-                <ProfileAction
-                  icon={<Ionicons name="help-circle-outline" size={26} color="#006FEE" />}
-                  label={t("faq")}
-                  onPress={() => router.push("../../student-stack/profile/faq")}
-                  textColor="text-zinc-200"
-                  bg="bg-zinc-900/60"
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ paddingBottom: 90, paddingTop: 20, paddingHorizontal: 18 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Profile Card */}
+            <Card animation={{ delay: 100, isFocused: true }} radius='xl' classNames={{wrapper: 'p-4 '}} isShadow>
+              <View className="flex-row items-center  rounded-2xl">
+                <View className="mr-5">
+                  <Image
+                    source={{ uri: user?.avatar }}
+                    className={[
+                      "w-20 h-20 rounded-full border-4",
+                      theme === "1" ? "border-theme1-primary" : "border-theme2-primary",
+                    ].join(" ")}
+                    style={{ backgroundColor: "#222" }}
                   />
-                <ProfileAction
-                  icon={<Ionicons name="log-out-outline" size={20} color="#f31260" />}
-                  label={t("logout")}
-                  onPress={handleLogout}
-                  textColor="text-danger"
-                  bg="bg-danger/10"
-                  iconColor="#db2777"
-                />
+                </View>
+                <View className="flex-1">
+                  <TextNative className="text-zinc-900 dark:text-white text-xl font-bold mb-1">{user?.name}</TextNative>
+                  <View className="flex-row items-center mb-1">
+                    <Ionicons name="person-circle-outline" size={16} color="#a1a1aa" />
+                    <TextNative className="text-zinc-400 text-sm ml-1">{user?.user_code}</TextNative>
+                  </View>
+                  <View className="flex-row items-center">
+                    <MaterialCommunityIcons name="email-outline" size={16} color="#a1a1aa" />
+                    <TextNative className="text-zinc-400 text-sm ml-1">{user?.email || "student@email.com"}</TextNative>
+                  </View>
+                </View>
               </View>
-          </Card>
-        </ScrollView>
+            </Card>
+
+            {/* Info Section */}
+            <Card radius="lg" animation={{ delay: 150, isFocused: true }} classNames={{wrapper: 'my-4 bg-black'}}>
+                <Text className={[
+                  "text-xs font-semibold mb-2 uppercase tracking-widest",
+                  theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
+                ].join(" ")}>
+                  {t("profileInformation")}
+                </Text>
+                <ProfileInfoRow
+                  icon={<Ionicons name="school-outline" size={20} color="#f31260" />}
+                  label={t("major")}
+                  value={user?.major || t("notAvailable")}
+                />
+                <ProfileInfoRow
+                  icon={<Feather name="calendar" size={20} color="#f59e42" />}
+                  label={t("year")}
+                  value={user?.year || t("notAvailable")}
+                />
+                <ProfileInfoRow
+                  icon={<Ionicons name="call-outline" size={20} color="#38bdf8" />}
+                  label={t("phone")}
+                  value={user?.phone || t("notAvailable")}
+                />
+            </Card>
+
+            {/* Pie Chart / Stats */}
+            <Card radius="lg" animation={{ delay: 200, isFocused: true }} classNames={{wrapper: 'mb-4 bg-black'}}>
+                <Text className={[
+                  "text-xs font-semibold mb-2 uppercase tracking-widest",
+                  theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
+                ].join(" ")}>
+                  {t("overview")}
+                </Text>
+                <PieChart />
+            </Card>
+
+            {/* Account Settings */}
+            <Card radius="lg" animation={{ delay: 250, isFocused: true }} classNames={{wrapper: 'mb-4 bg-black'}} >
+                <Text className={[
+                  "text-xs font-semibold mb-2 uppercase tracking-widest",
+                  theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
+                ].join(" ")}>
+                  {t("accountSettings")}
+                </Text>
+                <View className="gap-2">
+                  <ProfileAction
+                    icon={<Ionicons name="key-outline" size={20} color="#f59e42" />}
+                    label={t("changePassword")}
+                    onPress={() => {}}
+                    textColor="text-zinc-400"
+                    bg="bg-zinc-900/60"
+                  />
+                  <View className="flex-row items-center justify-between dark:bg-zinc-900 bg-zinc-100 rounded-full py-2 pl-4 pr-2">
+                    <View className="flex-row items-center gap-4">
+                      <Ionicons name="moon-outline" size={20} color="#a1a1aa" />
+                      <Text className="text-zinc-600 dark:text-zinc-200 text-base">{t("darkMode")}</Text>
+                    </View>
+                    <ButtonSwitch />
+                  </View>
+                  <ProfileAction
+                    icon={<MaterialCommunityIcons name="theme-light-dark" size={24} color={theme === "1" ? "#db2777" : "#006FEE"} />}
+                    label={t("changeTheme")}
+                    onPress={() => bottomSheetThemeRef.current?.present()}
+                    textColor="text-zinc-200"
+                    bg="bg-zinc-900/60"
+                  />
+                  <ProfileAction
+                    icon={<Ionicons name="language-outline" size={20} color="#38bdf8" />}
+                    label={t("changeLanguage")}
+                    onPress={() => bottomSheetRef.current?.present()}
+                    textColor="text-zinc-200"
+                    bg="bg-zinc-900/60"
+                  />
+                  <ProfileAction
+                    icon={<Ionicons name="person-circle-outline" size={24} color="#a1a1aa" />}
+                    label={t("contactAdmin")}
+                    onPress={() => router.push("../../student-stack/profile/contact")}
+                    textColor="text-zinc-200"
+                    bg="bg-zinc-900/60"
+                  />
+                  <ProfileAction
+                    icon={<Ionicons name="help-circle-outline" size={26} color="#006FEE" />}
+                    label={t("faq")}
+                    onPress={() => router.push("../../student-stack/profile/faq")}
+                    textColor="text-zinc-200"
+                    bg="bg-zinc-900/60"
+                    />
+                  <ProfileAction
+                    icon={<Ionicons name="log-out-outline" size={20} color="#f31260" />}
+                    label={t("logout")}
+                    onPress={handleLogout}
+                    textColor="text-danger"
+                    bg="bg-danger/10"
+                    iconColor="#db2777"
+                  />
+                </View>
+            </Card>
+          </ScrollView>
+        </MotiView>
+
       </SafeAreaView>
       <Language bottomSheetRef={bottomSheetRef} onLanguageChange={handleLanguageChange}/>
       <Theme bottomSheetRef={bottomSheetThemeRef} onThemeChange={handleThemeChange}/>

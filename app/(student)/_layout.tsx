@@ -4,7 +4,9 @@ import { router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 
 export default function TabsLayout() {
+    
     const { user } = useAuth();
+
     useEffect(() => {
         if (!user) {
             router.replace("/");
@@ -33,7 +35,7 @@ export default function TabsLayout() {
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
-                        router.push("/scan");
+                        router.push("/student-screens/scan");
                     }
                 }}
             />

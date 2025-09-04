@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useIsFocused } from "@react-navigation/native";
 import axios from "axios";
-import { Audio } from "expo-av";
+import { useAudioPlayer } from "expo-audio";
 import { CameraView, PermissionStatus, useCameraPermissions } from "expo-camera";
 import * as DocumentPicker from 'expo-document-picker';
 import * as Haptics from 'expo-haptics';
@@ -142,8 +142,12 @@ const Scan: React.FC = () => {
     const [soundEnabled, setSoundEnabled] = useState(true);
     
     // ============= Enhanced Sound System =============
-    const sounds = useRef<{ [key: string]: Audio.Sound }>({});
-    const soundLoaded = useRef<{ [key: string]: boolean }>({});
+    const successSoundPlayer = useAudioPlayer(SOUND_CONFIG.success.file);
+    const failedSoundPlayer = useAudioPlayer(SOUND_CONFIG.failed.file);
+    
+    // Set volumes
+    successSoundPlayer.volume = SOUND_CONFIG.success.volume;
+    failedSoundPlayer.volume = SOUND_CONFIG.failed.volume;
     
     const qrLock = useRef(false);
     const processingTimeout = useRef<NodeJS.Timeout>(null);
@@ -157,27 +161,19 @@ const Scan: React.FC = () => {
     const showResults = isSuccess || isFailed;
 
     // ============= Enhanced Sound Management =============
-    const loadSounds = async () => {
-        try {
-            for (const [soundName, config] of Object.entries(SOUND_CONFIG)) {
-                const sound = new Audio.Sound();
-                await sound.loadAsync(config.file);
-                await sound.setVolumeAsync(config.volume);
-                sounds.current[soundName] = sound;
-                soundLoaded.current[soundName] = true;
-            }
-        } catch (error) {
-            console.warn("Failed to load sounds:", error);
-        }
-    };
-
     const playSound = async (soundName: keyof typeof SOUND_CONFIG) => {
-        if (!soundEnabled || !soundLoaded.current[soundName]) return;
+        if (!soundEnabled) return;
         
         try {
-            const sound = sounds.current[soundName];
-            if (sound) {
-                await sound.replayAsync();
+            switch (soundName) {
+                case 'success':
+                    successSoundPlayer.play();
+                    break;
+                case 'failed':
+                    failedSoundPlayer.play();
+                    break;
+                default:
+                    break;
             }
         } catch (error) {
             console.warn(`Failed to play ${soundName} sound:`, error);
@@ -191,15 +187,7 @@ const Scan: React.FC = () => {
         }
     }, [soundEnabled]);
 
-    // ============= Load sounds on component mount =============
-    useEffect(() => {
-        loadSounds();
-        return () => {
-            Object.values(sounds.current).forEach(sound => {
-                sound.unloadAsync().catch(() => {});
-            });
-        };
-    }, []);
+    // ============= Audio players are now initialized with hooks =============
 
     // ============= Enhanced QR Upload Functions =============
     const handleImageUpload = useCallback(async () => {

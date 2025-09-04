@@ -2,7 +2,7 @@
 import { Alert, BlurCard, BottomSheetModalUi, Button, CircleLoading, Icon, Scanning, Text, useDisclosure } from "@/godui";
 import { useGetLocationStore } from "@/stores/useGetLocationStore";
 import { useUserStore } from "@/stores/userStore";
-import soundManager from "@/utils/soundManager";
+import { useSoundManager } from "@/utils/soundManager";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useIsFocused } from "@react-navigation/native";
@@ -18,12 +18,16 @@ import { ApiError, AttendanceApiService } from "./service/api";
 
 const SCHOOL_LOCATION = {
     // work location
-    // latitude: 13.369507133489616,
-    // longitude: 103.8658975460337,
+    latitude: 13.369507133489616,
+    longitude: 103.8658975460337,
+
+    // school location
+    // latitude: 13.3481352890704,
+    // longitude: 103.84711561382741,
 
     // home location
-    latitude : 13.353555915704485, 
-    longitude : 104.00318244982763
+    // latitude : 13.353555915704485, 
+    // longitude : 104.00318244982763
 };
 
 const MAX_DISTANCE_METERS = 50;
@@ -54,6 +58,7 @@ const useModalState = () => {
 
 // ============= QR Code Processing Function =============
 const processQRCode = async (qrData: string): Promise<{ success: boolean; data?: any; error?: string }> => {
+    console.log("QR Data:", qrData);
     try {
         // Enhanced QR validation
         if (!qrData || qrData.trim().length === 0) {
@@ -113,6 +118,9 @@ const Scan: React.FC = () => {
     const isFailed = scanState === 'failed' || scanState === 'error';
     const showResults = isSuccess;
 
+    // ============= Sound Management =============
+    const { play } = useSoundManager();
+
 
     const toggleSound = useCallback(() => {
         setSoundEnabled(!soundEnabled);
@@ -150,7 +158,7 @@ const Scan: React.FC = () => {
         if (Platform.OS !== 'web') {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         }
-        soundManager.play('failed');
+        play('failed');
     }, []);
 
 
@@ -223,7 +231,7 @@ const Scan: React.FC = () => {
                 qr_data: qrData,
             };
 
-            console.log('Creating attendance with payload:', attendancePayload);
+            // console.log('Creating attendance with payload:', attendancePayload);
 
             // Step 6: Create attendance record
             // const attendanceResult = await apiService.current.createAttendance(attendancePayload);
@@ -245,7 +253,7 @@ const Scan: React.FC = () => {
                 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             }
             setTimeout(() => {
-                soundManager.play('success');
+                play('success');
             }, 600);
             
         } catch (error: any) {
@@ -545,7 +553,7 @@ const Scan: React.FC = () => {
                 cancelText={t("exit")}
             />
 
-            <View style={styles.container} className="bg-zinc-300 dark:bg-zinc-950">
+            <View style={styles.container} className="bg-zinc-300 dark:bg-zinc-900">
                 {/* ============= Camera View ============= */}
                 <MotiView 
                     from={{ opacity: 1, scale: 1 }}
@@ -608,6 +616,7 @@ const Scan: React.FC = () => {
                                     : getScanStatusMessage()
                                 }
                             </Text>
+                          
                         </MotiView>
                     </View>
 
@@ -691,8 +700,8 @@ const Scan: React.FC = () => {
                     className="absolute inset-0 flex-1 justify-center items-center px-4  overflow-hidden"
                 >
                     <View className="w-full  rounded-3xl overflow-hidden p-0">
-                        <View className="w-80 h-80 bg-theme1-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-3xl"/>
-                        <View className="bg-zinc-300/95 dark:bg-zinc-600/90">
+                        <View className="w-80 h-80 bg-theme1-primary/70 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"/>
+                        <View className="bg-zinc-300/95 dark:bg-zinc-600/80">
                             <BlurCard intensity={100} className="p-0" radius="sm">
                                 <MotiView
                                     from={{ opacity: 0, scale: showResults ? 1 : 0.9 }}

@@ -16,6 +16,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD6Z6Z6Z6Z6Z6Z6Z6Z6Z6Z6Z6Z6Z6Z6Z6"
+        }
+      },
       "edgeToEdgeEnabled": true
     },
     "web": {
@@ -35,12 +40,6 @@
         }
       ],
       "expo-asset",
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
-      ],
       [
         "expo-camera",
         {
@@ -66,7 +65,13 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
         }
-      ]
+      ],
+      "expo-audio",
+      "expo-maps",
+      {
+        "requestLocationPermission": true,
+        "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
+      }
     ],
     "experiments": {
       "typedRoutes": true

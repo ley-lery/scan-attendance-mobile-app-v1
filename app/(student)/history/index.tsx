@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { TouchableOpacity, View } from 'react-native'
 import Filter from './filter'
 
-
 export const HISTORY_DATA = [
   { id: 1, status: 'present', date: '2025-08-20', name: 'Web Developer', time: '08:00 AM', room: 'Room 101' },
   { id: 2, status: 'absent', date: '2025-08-21', name: 'UI/UX Designer', time: '09:00 AM', room: 'Room 102' },
@@ -40,8 +39,8 @@ const STATUS_ICON = {
 }
 
 const History = () => {
-  const isFocused = useIsFocused();
   const { t } = useTranslation();
+  const isFocused = useIsFocused();
   const [activeFilter, setActiveFilter] = useState('all')
   const bottomSheetRef = React.useRef<BottomSheetModal | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -73,158 +72,157 @@ const History = () => {
   if (isLoading) return <Loading isLoading={isLoading} />
 
   return (
-    <View className='flex-1 bg-zinc-200 dark:bg-zinc-900'>
-      {/* <MotiView
-          from={{ opacity: 0, translateY: 50 }}
-          animate={{ opacity: isFocused ? 1 : 0, translateY: isFocused ? 0 : 50 }}
-          transition={{ type: 'timing', duration: 300, delay: 400 }}
-          className="w-full h-full absolute top-0 left-0"
-        >
-          <Image source={theme === "1" ? IMG.BGH : IMG.BGBH} resizeMode="cover" />
-      </MotiView> */}
-      <BlurCard 
-        intensity={80} 
-        tint='default' 
-        placementRadius='bottom-left'
-        classNames={{
-          blur: 'pt-10 pb-2 px-4',
-          wrapper: 'absolute top-0 left-0 right-0 z-10',
-        }}
+    <View className='flex-1 bg-zinc-100 dark:bg-zinc-900'>
+      <MotiView
+        from={{ opacity: 0, scale: isFocused ? 1 : 0.98 }}
+        animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.98 }}
+        transition={{ type: 'timing', duration: 200, delay: 0 }}
+        className='flex-1 bg-zinc-100 dark:bg-zinc-900'
       >
-        <MotiView
-          from={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
-          transition={{ type: 'timing', duration: 200 }}
-          className='flex-row items-center justify-between'
+        <BlurCard 
+          intensity={80} 
+          tint='default' 
+          placementRadius='bottom-left'
+          classNames={{
+            blur: 'pt-10 pb-2 px-4',
+            wrapper: 'absolute top-0 left-0 right-0 z-10',
+          }}
         >
-          <Text className="dark:text-white text-black font-medium text-2xl">{t('attendanceHistory')}</Text>
-        </MotiView>
-        <MotiView
-          from={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
-          className='flex-row items-center gap-2'
-        >
-          <Input placeholder="Search by subject name" variant='solid' radius='md' className='mt-2 flex-1' startContent={<AntDesign name="search1" size={24} color="#52525b" />} size='md'/>
-          <TouchableOpacity onPress={handleOpenFillter} className='dark:bg-black bg-white p-3 rounded-md shadow-lg shadow-white dark:shadow-black'>
-            <Icon name="filter" size={24} />
-          </TouchableOpacity>
-        </MotiView>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <MotiView
             from={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
-            transition={{ type: 'timing', duration: 200, delay: 200 }}
-            className='flex-row items-center gap-2 mt-2 p-1'
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'timing', duration: 200 }}
+            className='flex-row items-center justify-between'
           >
-            {FILTERS.map((filter) => {
-              const isActive = activeFilter === filter.value
-              return (
-                  <MotiView
-                    key={filter.value}
-                    from={{
-                      scale: 1,
-                      opacity: 0,
-                      translateY: -10,
-                    }}
-                    animate={{
-                      scale: isActive ? 1.05 : 1,
-                      opacity: 1,
-                      translateY: 0,
-                    }}
-                    transition={{
-                      type: 'timing',
-                      duration: 350,
-                    }}
-                  >
-                    <TouchableOpacity onPress={() => setActiveFilter(filter.value)} activeOpacity={0.7}>
-                      {isActive ? (
-                        <View className='bg-white dark:bg-black py-2 px-6 rounded-full dark:shadow-lg dark:shadow-black' >
-                          <Typography variant="body" >{filter.label}</Typography>
-                        </View>
-                      ) : (
-                        <View className=' dark:bg-white/20 bg-black/20 py-2 px-6 rounded-full ' >
-                          <Text className='dark:text-white text-zinc-600 font-medium text-base'>{filter.label}</Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  </MotiView>
-              )
-            })}
+            <Text className="dark:text-white text-black font-medium text-2xl">{t('attendanceHistory')}</Text>
           </MotiView>
-        </ScrollView>
-      </BlurCard>
-      <ScrollView className='flex-1 px-4 pt-2' contentContainerStyle={{ paddingTop: 160, paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
-        <MotiView
-          from={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
-          transition={{ type: 'timing', duration: 200, delay: 200 }}
-          className='mb-4'
-        >
-           <Card radius='xl' isShadow classNames={{ wrapper: 'p-6' }} animation={{ delay: 200, isFocused: isFocused }}>
-              <View className='flex-row items-center justify-between gap-2'>
-                <View className='items-center gap-0'>
-                  <Text className='text-success text-lg font-semibold'>45</Text>
-                  <Text className='text-success text-base'>{t('present')}</Text>
-                </View>
-                <View className='items-center gap-0'>
-                  <Text className='text-danger text-lg font-semibold'>45</Text>
-                  <Text className='text-danger text-base'>{t('absent')}</Text>
-                </View>
-                <View className='items-center gap-0'>
-                  <Text className='text-warning text-lg font-semibold'>45</Text>
-                  <Text className='text-warning text-base'>{t('late')}</Text>
-                </View>
-                <View className='items-center gap-0'>
-                  <Text className='dark:text-white text-zinc-700 text-lg font-semibold'>45</Text>
-                  <Text className='text-white text-base'>{t('total')}</Text>
-                </View>
-              </View>
-           </Card>
-        </MotiView>
-        <AnimatePresence>
-          {filteredData.length === 0 ? (
+          <MotiView
+            from={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className='flex-row items-center gap-2'
+          >
+            <Input placeholder="Search by subject name" variant='solid' radius='md' className='mt-2 flex-1' startContent={<AntDesign name="search1" size={24} color="#52525b" />} size='md'/>
+            <TouchableOpacity onPress={handleOpenFillter} className='dark:bg-black bg-white p-3 rounded-md shadow-lg shadow-white dark:shadow-black'>
+              <Icon name="filter" size={24} />
+            </TouchableOpacity>
+          </MotiView>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <MotiView
-              from={{ opacity: 0, translateY: 10 }}
-              animate={{ opacity: isFocused ? 1 : 0, translateY: isFocused ? 0 : 10 }}
-              exit={{ opacity: 0, translateY: 10 }}
-              style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 48 }}
+              from={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'timing', duration: 200, delay: 200 }}
+              className='flex-row items-center gap-2 mt-2 p-1'
             >
-              <Text className='text-zinc-400 text-base'>No records found for "{FILTERS.find(f => f.value === activeFilter)?.label}"</Text>
+              {FILTERS.map((filter) => {
+                const isActive = activeFilter === filter.value
+                return (
+                    <MotiView
+                      key={filter.value}
+                      from={{
+                        scale: 1,
+                        opacity: 0,
+                        translateY: -10,
+                      }}
+                      animate={{
+                        scale: isActive ? 1.05 : 1,
+                        opacity: 1,
+                        translateY: 0,
+                      }}
+                      transition={{
+                        type: 'timing',
+                        duration: 350,
+                      }}
+                    >
+                      <TouchableOpacity onPress={() => setActiveFilter(filter.value)} activeOpacity={0.7}>
+                        {isActive ? (
+                          <View className='bg-white dark:bg-black py-2 px-6 rounded-full' >
+                            <Typography variant="body" >{filter.label}</Typography>
+                          </View>
+                        ) : (
+                          <View className=' dark:bg-white/20 bg-black/5 py-2 px-6 rounded-full ' >
+                            <Text className='dark:text-white text-zinc-600 font-medium text-base'>{filter.label}</Text>
+                          </View>
+                        )}
+                      </TouchableOpacity>
+                    </MotiView>
+                )
+              })}
             </MotiView>
-          ) : (
-            filteredData.map((item, index) => (
-              <Card key={index} radius='xl' isShadow classNames={{ wrapper: 'mb-2' }} animation={{ delay: index * 120, isFocused: isFocused }}>
+          </ScrollView>
+        </BlurCard>
+        <ScrollView className='flex-1 px-4 pt-2' contentContainerStyle={{ paddingTop: 160, paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
+          <MotiView
+            from={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'timing', duration: 200, delay: 200 }}
+            className='mb-4'
+          >
+            <Card radius='xl' isShadow classNames={{ wrapper: 'p-6' }} animation={{ delay: 200, isFocused: true }}>
                 <View className='flex-row items-center justify-between gap-2'>
-                  <View className='flex-row items-center gap-1'>
-                    <Ionicons name="calendar" size={18} color="#a1a1aa" />
-                    <Text className='text-zinc-400 text-base'>{item.date}</Text>
+                  <View className='items-center gap-0'>
+                    <Text className='text-success text-lg font-semibold'>45</Text>
+                    <Text className='text-success text-base'>{t('present')}</Text>
                   </View>
-                  <View className='flex-row items-center gap-1'>
-                    <Ionicons
-                      name={STATUS_ICON[item.status as keyof typeof STATUS_ICON]?.name || "ellipse" as any}
-                      size={24}
-                      color={STATUS_ICON[item.status as keyof typeof STATUS_ICON]?.color || "#a1a1aa"}
-                    />
+                  <View className='items-center gap-0'>
+                    <Text className='text-danger text-lg font-semibold'>45</Text>
+                    <Text className='text-danger text-base'>{t('absent')}</Text>
                   </View>
-                </View>
-                <View className='mt-2'>
-                  <Text className='dark:text-zinc-300 text-zinc-700 text-lg font-semibold'>{item.name}</Text>
-                  <View className='flex-row items-center gap-2 mt-1'>
-                    <View className='flex-row items-center gap-2 mt-1'>
-                      <Ionicons name="time-outline" size={18} color="#a1a1aa" />
-                      <Text className='text-zinc-400 text-sm'>{item.time}</Text>
-                    </View>
-                    <View className='flex-row items-center gap-2 mt-1'>
-                      <Ionicons name="location-outline" size={18} color="#a1a1aa" />
-                      <Text className='text-zinc-400 text-sm'>{item.room}</Text>
-                    </View>
+                  <View className='items-center gap-0'>
+                    <Text className='text-warning text-lg font-semibold'>45</Text>
+                    <Text className='text-warning text-base'>{t('late')}</Text>
+                  </View>
+                  <View className='items-center gap-0'>
+                    <Text className='dark:text-white text-zinc-700 text-lg font-semibold'>45</Text>
+                    <Text className='text-white text-base'>{t('total')}</Text>
                   </View>
                 </View>
-              </Card>
-            ))
-          )}
-        </AnimatePresence>
-      </ScrollView>
+            </Card>
+          </MotiView>
+          <AnimatePresence>
+            {filteredData.length === 0 ? (
+              <MotiView
+                from={{ opacity: 0, translateY: 10 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                exit={{ opacity: 0, translateY: 10 }}
+                style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 48 }}
+              >
+                <Text className='text-zinc-400 text-base'>No records found for "{FILTERS.find(f => f.value === activeFilter)?.label}"</Text>
+              </MotiView>
+            ) : (
+              filteredData.map((item, index) => (
+                <Card key={index} radius='xl' classNames={{ wrapper: 'mb-2' }} animation={{ delay: index * 120, isFocused: true }}>
+                  <View className='flex-row items-center justify-between gap-2'>
+                    <View className='flex-row items-center gap-1'>
+                      <Ionicons name="calendar" size={18} color="#a1a1aa" />
+                      <Text className='text-zinc-400 text-base'>{item.date}</Text>
+                    </View>
+                    <View className='flex-row items-center gap-1'>
+                      <Ionicons
+                        name={STATUS_ICON[item.status as keyof typeof STATUS_ICON]?.name || "ellipse" as any}
+                        size={24}
+                        color={STATUS_ICON[item.status as keyof typeof STATUS_ICON]?.color || "#a1a1aa"}
+                      />
+                    </View>
+                  </View>
+                  <View className='mt-2'>
+                    <Text className='dark:text-zinc-300 text-zinc-700 text-lg font-semibold'>{item.name}</Text>
+                    <View className='flex-row items-center gap-2 mt-1'>
+                      <View className='flex-row items-center gap-2 mt-1'>
+                        <Ionicons name="time-outline" size={18} color="#a1a1aa" />
+                        <Text className='text-zinc-400 text-sm'>{item.time}</Text>
+                      </View>
+                      <View className='flex-row items-center gap-2 mt-1'>
+                        <Ionicons name="location-outline" size={18} color="#a1a1aa" />
+                        <Text className='text-zinc-400 text-sm'>{item.room}</Text>
+                      </View>
+                    </View>
+                  </View>
+                </Card>
+              ))
+            )}
+          </AnimatePresence>
+        </ScrollView>
+      </MotiView>
       <Filter bottomSheetRef={bottomSheetRef} onFilterChange={(data) => console.log(data)} />
     </View>
   )

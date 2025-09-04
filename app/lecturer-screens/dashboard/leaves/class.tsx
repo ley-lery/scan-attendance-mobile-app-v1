@@ -82,26 +82,21 @@ const ClassCard = ({ cls, idx, isFocused, onPress }: ClassCardProps) => (
     radius="xl"
     transparent
     isShadow
-    classNames={{ wrapper: 'bg-zinc-800' }}
-    animation={{
-      type: 'timing',
-      duration: 300,
-      delay: idx * 120,
-      isFocused,
-    }}
+    classNames={{ wrapper: 'bg-white dark:bg-zinc-800' }}
+    animation={{ delay: idx * 120, isFocused }}
   >
     <TouchableOpacity activeOpacity={0.92} onPress={onPress}>
       <View className="flex-row items-center">
         <View className="flex-1">
-          <Text className="text-white font-bold text-lg mb-0.5">{cls.name}</Text>
-          <Text className="text-white/80 text-sm mb-0.5">
+          <Text className="text-zinc-900 dark:text-white font-bold text-lg mb-0.5">{cls.name}</Text>
+          <Text className="text-zinc-900 dark:text-white/80 text-sm mb-0.5">
             Teacher: <Text className="font-medium">{cls.teacher}</Text>
           </Text>
           <View className="flex-row flex-wrap gap-2 mt-1">
             {[cls.period, cls.semester, cls.course].map((item) => (
               <Text
                 key={item}
-                className="text-white/70 text-sm px-2 py-0.5 bg-black/20 rounded-full"
+                className="text-zinc-900 dark:text-white/70 text-sm px-2 py-0.5 bg-zinc-100 dark:bg-black/20 rounded-full"
               >
                 {item}
               </Text>
@@ -109,16 +104,8 @@ const ClassCard = ({ cls, idx, isFocused, onPress }: ClassCardProps) => (
           </View>
         </View>
         <View className="ml-3">
-          <View
-            className="bg-black px-4 py-2 rounded-full flex-row items-center"
-            style={{
-              shadowColor: '#000',
-              shadowOffset: { width: 2, height: 2 },
-              shadowOpacity: 0.8,
-              shadowRadius: 4,
-            }}
-          >
-            <Text className="text-white font-semibold text-xs mr-1">View</Text>
+          <View className="dark:bg-black bg-zinc-100 px-4 py-2 rounded-full flex-row items-center dark:shadow-lg shadow-black">
+            <Text className="text-zinc-900 dark:text-white font-semibold text-xs mr-1">View</Text>
             <Icon name="chevron-forward" size={16} />
           </View>
         </View>
@@ -151,7 +138,7 @@ const Class = () => {
 
   return (
     <>
-      <SafeAreaView className="bg-white dark:bg-zinc-900 flex-1">
+      <SafeAreaView className="bg-zinc-100 dark:bg-zinc-900 flex-1">
         <View className="p-4 flex-1 gap-4">
           {/* Header Card */}
           <Card
@@ -166,21 +153,15 @@ const Class = () => {
                 <View className="flex-row items-center mb-2">
                   <TouchableOpacity
                     onPress={handleBack}
-                    className="bg-zinc-800 p-3 rounded-md mr-3"
-                    style={{
-                      shadowColor: '#27272a',
-                      shadowOffset: { width: 4, height: 4 },
-                      shadowOpacity: 0.8,
-                      shadowRadius: 4,
-                    }}
+                    className="dakr:bg-zinc-800 bg-zinc-200 dark:shadow-lg shadow-black p-3 rounded-md mr-3"
                   >
                     <Icon name="chevron-back" size={20} />
                   </TouchableOpacity>
-                  <Text className="text-lg font-bold text-zinc-200">
+                  <Text className="text-lg font-bold text-zinc-700 dark:text-zinc-200">
                     Your Classes
                   </Text>
                 </View>
-                <Text className="text-zinc-400 text-base">
+                <Text className="text-zinc-500 dark:text-zinc-400 text-base">
                   Select a class to view leave history and manage attendance.
                 </Text>
               </View>

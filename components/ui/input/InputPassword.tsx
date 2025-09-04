@@ -28,6 +28,8 @@ interface Props {
   isInvalid?: boolean;
   onBlur?: (e: any) => void;
   onFocus?: (e: any) => void;
+  autoComplete?: any;
+  textContentType?: any;
 }
 
 export const InputPassword: React.FC<Props> = ({
@@ -51,6 +53,8 @@ export const InputPassword: React.FC<Props> = ({
   isInvalid = false,
   onBlur,
   onFocus,
+  autoComplete,
+  textContentType,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -107,6 +111,8 @@ export const InputPassword: React.FC<Props> = ({
           style={{ lineHeight: 19 }}
           onFocus={onFocus}
           onBlur={onBlur}
+          autoComplete={autoComplete}
+          textContentType={textContentType}
         />
         <View className="flex-row items-center gap-2">
           {secureTextEntry && (

@@ -42,7 +42,9 @@ interface Props {
     isFocused?: boolean
   }
   notDarkMode?: boolean
-}
+  autoComplete?: any
+  textContentType?: any
+  }
 
 export const Input: React.FC<Props > = ({
   label,
@@ -79,6 +81,8 @@ export const Input: React.FC<Props > = ({
     isFocused: false
   },
   notDarkMode = false,
+  autoComplete,
+  textContentType,
   ...props
 }) => {
  
@@ -172,6 +176,8 @@ export const Input: React.FC<Props > = ({
             multiline={multiline}
             numberOfLines={numberOfLines}
             editable={editable}
+            autoComplete={autoComplete}
+            textContentType={textContentType}
             {...props}
           />
           <View className={["flex-row items-center gap-2 ", classNames?.buttonClear].join(' ')}>

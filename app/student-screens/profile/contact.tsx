@@ -82,8 +82,8 @@ const Contact = () => {
                 showsVerticalScrollIndicator={false}
             >
                 <MotiView
-                    from={{ opacity: 0, translateY: 30 }}
-                    animate={{ opacity: 1, translateY: 0 }}
+                    from={{ opacity: 0, translateY: 30, scale: isSending ? 0.9 : 1 }}
+                    animate={{ opacity: 1, translateY: 0, scale: isSending ? 0.9 : 1 }}
                     transition={{ type: 'timing', duration: 600 }}
                     className="flex-1 justify-center h-screen px-4"
                 >
@@ -108,6 +108,7 @@ const Contact = () => {
                             errorMessage={t("validation.required")}
                             isRequired
                             isClearable
+                            isDisabled={isSending}
                         />
                         <Button
                             label={isSending ? t("sending") : t("send")}

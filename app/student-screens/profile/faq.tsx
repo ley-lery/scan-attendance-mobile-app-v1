@@ -1,4 +1,4 @@
-import { Button } from '@/godui'
+import { Button, Text, Typography } from '@/godui'
 import { useThemeStore } from '@/stores/useThemeStore'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useIsFocused } from '@react-navigation/native'
@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 import { AnimatePresence, MotiView } from 'moti'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 
@@ -22,7 +22,7 @@ const FAQ = () => {
 
   // Accent color based on theme
   const accentColor = theme === "1" ? "#db2777" : "#006FEE"
-  const accentBg = theme === "1" ? "bg-pink-700/30" : "bg-blue-700/30"
+  const accentBg = theme === "1" ? "bg-pink-700/10 dark:bg-pink-700/20" : "bg-blue-700/10 dark:bg-blue-700/20"
   const accentText = theme === "1" ? "text-pink-600" : "text-blue-600"
 
   const faqData = [
@@ -50,11 +50,11 @@ const FAQ = () => {
   
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
+    <SafeAreaView className="flex-1 bg-white dark:bg-black">
       {/* Back Button */}
       <MotiView
-        from={{ opacity: 0, translateX: -50 }}
-        animate={{ opacity: isFocused ? 1 : 0, translateX: isFocused ? 0 : -50 }}
+        from={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
         transition={{ type: 'timing', duration: 600, delay: 400 }}
         className="absolute top-8 left-0 z-20"
       >
@@ -85,10 +85,10 @@ const FAQ = () => {
                 color={accentColor}
                 style={{ marginRight: 8 }}
               />
-              <Text className="text-3xl font-extrabold text-white tracking-tight">FAQ</Text>
+              <Typography variant="h1">{t("faq")}</Typography>
             </View>
-            <Text className="text-zinc-300 text-base mb-4">
-              {t("Frequently Asked Questions") || "Frequently Asked Questions"}
+            <Text className="dark:text-zinc-300 text-zinc-500 text-base mb-4">
+              {t("descFaq")}
             </Text>
           </MotiView>
 
@@ -107,35 +107,29 @@ const FAQ = () => {
                     duration: 400,
                     delay: idx * 100 + 200
                   }}
-                  className="mb-4"
-                  style={{
-                    shadowColor: accentColor,
-                    shadowOpacity: isOpen ? 0.18 : 0.08,
-                    shadowRadius: isOpen ? 12 : 6,
-                    shadowOffset: { width: 0, height: 4 },
-                    elevation: isOpen ? 6 : 2,
-                  }}
+                  className="mb-4 shadow-lg shadow-white dark:shadow-black"
                 >
                   {/* Question */}
                   <TouchableOpacity
                     className={[
                       "flex-row items-center justify-between px-5 py-4",
                       isOpen
-                        ? `rounded-t-2xl ${accentBg} border-b border-zinc-800`
-                        : "rounded-2xl bg-zinc-900",
+                        ? `rounded-t-2xl bg-zinc-100 dark:bg-zinc-900 border-b dark:border-zinc-800 border-zinc-200`
+                        : "rounded-2xl bg-zinc-100 dark:bg-zinc-900",
                       "transition-all duration-200"
                     ].join(" ")}
                     activeOpacity={0.92}
                     onPress={() => handleToggle(idx)}
                   >
-                    <View className="flex-row items-center flex-1">
-                      <MaterialCommunityIcons
-                        name={item.icon as any}
-                        size={24}
-                        color={accentColor}
-                        style={{ marginRight: 14 }}
-                      />
-                      <Text className={`text-white text-base font-semibold flex-1 pr-3 ${isOpen ? accentText : ""}`}>
+                    <View className="flex-row items-center flex-1 gap-4">
+                      <View className='p-4 bg-zinc-100 dark:bg-black rounded-md shadow-lg shadow-zinc-200 dark:shadow-black '>
+                        <MaterialCommunityIcons
+                          name={item.icon as any}
+                          size={24}
+                          color={accentColor}
+                        />
+                      </View>
+                      <Text className={`dark:text-white text-zinc-600 text-base font-semibold flex-1 pr-3 ${isOpen ? accentText : ""}`}>
                         {item.question}
                       </Text>
                     </View>
@@ -162,30 +156,11 @@ const FAQ = () => {
                   <AnimatePresence>
                     {isOpen && (
                       <MotiView
-                        from={{
-                          opacity: 0,
-                          height: 0,
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          height: 100,
-                          paddingTop: 18,
-                          paddingBottom: 18,
-                        }}
-                        exit={{
-                          opacity: 0,
-                          height: 0,
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                        }}
-                        transition={{
-                          type: 'timing',
-                          duration: 350,
-                          opacity: { duration: 200 }
-                        }}
-                        className={`bg-zinc-900 rounded-b-2xl px-6 overflow-hidden border-t border-zinc-800`}
+                        from={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
+                        animate={{ opacity: 1, height: 100, paddingTop: 18, paddingBottom: 18 }}
+                        exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
+                        transition={{ type: 'timing', duration: 350, opacity: { duration: 200 } }}
+                        className={`bg-zinc-100 dark:bg-zinc-900 rounded-b-2xl px-6 overflow-hidden border-t dark:border-zinc-800 border-zinc-200`}
                       >
                         <MotiView
                           from={{ opacity: 0, translateY: -10 }}
@@ -193,7 +168,7 @@ const FAQ = () => {
                           exit={{ opacity: 0, translateY: -10 }}
                           transition={{ type: 'timing', duration: 250, delay: 50 }}
                         >
-                          <Text className="text-zinc-200 text-base leading-relaxed">
+                          <Text className="dark:text-white text-zinc-600 text-base leading-relaxed">
                             {item.answer}
                           </Text>
                         </MotiView>
@@ -209,7 +184,7 @@ const FAQ = () => {
               from={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: 'timing', duration: 600, delay: 600 }}
-              className={`mt-2 mb-8 px-5 py-5 rounded-2xl ${accentBg} flex-row items-center`}
+              className={`mt-2 mb-8 px-5 py-5 rounded-2xl flex-row items-center`}
               style={{
                 shadowColor: accentColor,
                 shadowOpacity: 0.12,
@@ -225,15 +200,15 @@ const FAQ = () => {
                 style={{ marginRight: 14 }}
               />
               <View className="flex-1">
-                <Text className={`text-white font-semibold text-base mb-1`}>
-                  {t("Didn't find your answer?")}
+                <Text className={`dark:text-white text-zinc-600 font-semibold text-base mb-1`}>
+                  {t("notAnswer")}
                 </Text>
-                <Text className="text-zinc-300 text-sm mb-2">
-                  {t("Contact our support team and we'll help you out!")}
+                <Text className="dark:text-zinc-300 text-zinc-600 text-sm mb-2">
+                  {t("contactSupportDesc")}
                 </Text>
                 <Button
-                  label={t("Contact Support")}
-                  onPress={() => router.push('/profile/contact')}
+                  label={t("contactSupport")}
+                  onPress={() => router.push('./contact')}
                   color="primary"
                   size="sm"
                   variant="solid"

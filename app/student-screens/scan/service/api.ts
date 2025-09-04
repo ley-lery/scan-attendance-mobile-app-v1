@@ -184,3 +184,6 @@ export class AttendanceApiService {
     //     }
     // }
 }
+
+// Default export for the service instance
+export default AttendanceApiService.getInstance();

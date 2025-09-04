@@ -1,5 +1,7 @@
 // ToastItem.tsx
-import { BlurCard, Text } from "@/godui";
+import { Text } from "@/components/tag/Text";
+import { BlurCard } from "@/components/ui/card/BlurCard";
+import { CircleLoading } from "@/components/ui/loadig/CircleLoading";
 import { ToastInternal } from "@/types/toast.types";
 import { Ionicons } from "@expo/vector-icons";
 import { MotiView } from "moti";
@@ -15,12 +17,9 @@ const typeStyles: Record<
   warning: { container: "bg-amber-600/90 border-amber-400", icon: "warning-outline", color: "#f5a524" },
 };
 
-export const ToastItem: React.FC<{
-  toast: ToastInternal;
-  onClose: () => void;
-}> = ({ toast, onClose }) => {
+export const ToastItem: React.FC<{ toast: ToastInternal; onClose: () => void; }> = ({ toast, onClose }) => {
    const colorScheme = useColorScheme();
-  const { title, message, type } = toast;
+  const { title, message, type, animationIcon = true } = toast;
   const stylePreset = typeStyles[type];
   return (
     <MotiView
@@ -30,12 +29,12 @@ export const ToastItem: React.FC<{
       transition={{ type: "spring", stiffness: 200, damping: 12 }}
       style={{ zIndex: 9999, flex: 1 }}
     >
-      <BlurCard tint={colorScheme === 'dark' ? 'light' : 'dark'} radius="xl" className="w-[28rem] p-0">
+      <BlurCard intensity={colorScheme === 'dark' ? 50 : 100} tint={colorScheme === 'dark' ? 'light' : 'dark'} radius="xl" className="w-[28rem] p-0">
         <View
           className={["p-0 flex-row items-start gap-4"].join(" ")}
         >
-          <View className="bg-black shadow rounded-sm p-3 items-center justify-center">
-              <Ionicons name={stylePreset.icon} size={23} color={stylePreset.color} />
+          <View className="bg-white dark:bg-black shadow shadow-transparent dark:shadow-black/50 rounded-sm p-1 items-center justify-center">
+              {animationIcon ? <CircleLoading size={40} isSuccess={type === 'success'} isFailed={type === 'error'} isLoading={type === 'warning'} /> : <Ionicons name={stylePreset.icon} size={23} color={stylePreset.color} />}
           </View>
 
           <View className="flex-1 gap-1">

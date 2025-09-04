@@ -14,17 +14,25 @@ export interface User {
     avatar?: string;
 }
 
+export interface Lecturer extends User {
+    user_code?: string;
+    years_experience?: number;
+    total_students?: number;
+    total_courses?: number;
+}
+
 interface AuthContextType {
-    user: User | null;
+    user: User | Lecturer | null;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
     logout: () => void;
+    register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Mock user data - In production, this would come from your backend
-const MOCK_USERS: Record<string, { password: string; user: User }> = {
+const MOCK_USERS: Record<string, { password: string; user: User | Lecturer }> = {
     "student@university.edu": {
         password: "123",
         user: {
@@ -47,12 +55,16 @@ const MOCK_USERS: Record<string, { password: string; user: User }> = {
             email: "lecturer@university.edu",
             role: "lecturer",
             department: "Computer Science",
+            user_code: "LE2244466",
+            years_experience: 5,
+            total_students: 100,
+            total_courses: 10,
         },
     },
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | Lecturer | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -67,6 +79,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         checkAuthState();
     }, []);
+    const register = async (name: string, email: string, password: string) => {
+        try {
+            setIsLoading(true);
+
+            // Simulate API call delay
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            const existingUser = MOCK_USERS[email.toLowerCase()];
+
+            if (existingUser) {
+                return { success: false, error: "Email already exists" };
+            }
+
+            const newUser: User | Lecturer = {
+                id: (Object.keys(MOCK_USERS).length + 1).toString(),
+                avatar: "https://i.pravatar.cc/400?img=58",
+                name: name,
+                email: email,
+                role: "student",
+                department: "Computer Science",
+            };
+
+            MOCK_USERS[email.toLowerCase()] = {
+                password: password,
+                user: newUser,
+            };
+
+            setUser(newUser);
+            return { success: true, user: newUser };
+        } catch (error) {
+            console.error("Registration error:", error);
+            return { success: false, error: "Registration failed. Please try again." };
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const login = async (email: string, password: string) => {
         try {
@@ -96,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+        <AuthContext.Provider value={{ user, isLoading, login, logout, register }}>
             {children}
         </AuthContext.Provider>
     );

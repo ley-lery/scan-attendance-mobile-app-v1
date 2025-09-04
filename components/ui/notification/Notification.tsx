@@ -1,4 +1,5 @@
-import { BlurCard, Button } from "@/godui";
+import { Button } from "@/components/ui/button/Button";
+import { BlurCard } from "@/components/ui/card/BlurCard";
 import { MotiView } from "moti";
 import React from "react";
 import { Dimensions, Modal, Platform, ScrollView, View } from "react-native";

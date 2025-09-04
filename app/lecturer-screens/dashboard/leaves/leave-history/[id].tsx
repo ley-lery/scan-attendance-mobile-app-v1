@@ -241,30 +241,27 @@ const leaveTypeIcon = (type: string) => {
 const LeaveCard = ({ leave, isFocused , index }: { leave: LeaveItem, isFocused: boolean, index: number }) => (
   <Card
     isShadow
-    animation={{
-      delay: index * 120,
-      isFocused: isFocused
-    }}
+    animation={{ delay: index * 120, isFocused }}
     transparent
-    classNames={{ wrapper: 'bg-zinc-800'}}
+    classNames={{ wrapper: 'bg-white dark:bg-zinc-800'}}
     radius='xl'
   >
     <View className='flex-row items-center gap-4'>
-      <View className='bg-black p-4 rounded-md' style={{shadowColor: '#000', shadowOffset: {width: 2, height: 2}, shadowOpacity: 0.8, shadowRadius: 4}}>
+      <View className='dark:bg-black bg-zinc-100 p-4 rounded-md dark:shadow-lg shadow-black'>
         <Icon
           name={leaveTypeIcon(leave.type)}
           size={28}
         />
       </View>
       <View className="flex-1 gap-1">
-        <Text className="text-white font-bold text-base">{leave.type}</Text>
+        <Text className="text-zinc-900 dark:text-white font-bold text-base">{leave.type}</Text>
         <View className="flex-row items-center gap-1">
           <Icon name="calendar-outline" size={16} color="#a1a1aa" />
-          <Text className="text-zinc-400 text-xs">{leave.date}</Text>
+          <Text className="text-zinc-400 dark:text-white/70 text-xs">{leave.date}</Text>
         </View>
         <View className="flex-row items-center gap-1">
           <Icon name="document-text-outline" size={16} color="#a1a1aa" />
-          <Text className="font-normal text-zinc-400 text-sm">{leave.reason}</Text>
+          <Text className="font-normal text-zinc-400 dark:text-white/70 text-sm">{leave.reason}</Text>
         </View>
       </View>
       <View className="items-end">
@@ -291,7 +288,7 @@ const LeaveHistory = () => {
   }, [leaveHistory]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-zinc-900">
+    <SafeAreaView className="flex-1 bg-zinc-100 dark:bg-zinc-900">
       <View className="p-4 flex-1 gap-4">
         {/* Header */}
         <Card
@@ -311,27 +308,21 @@ const LeaveHistory = () => {
                   router.back();
                 }
               }}
-              className="bg-zinc-800 p-3 rounded-md mr-3"
-              style={{
-                shadowColor: '#27272a',
-                shadowOffset: { width: 4, height: 4 },
-                shadowOpacity: 0.8,
-                shadowRadius: 4,
-              }}
+              className="bg-white dark:bg-zinc-800 p-3 rounded-md mr-3 shadow-lg shadow-zinc-200 dark:shadow-black"
             >
               <Icon name="chevron-back" size={20} />
             </TouchableOpacity>
-            <Text className="text-lg font-bold text-zinc-200">
+            <Text className="text-lg font-bold dark:text-zinc-200 text-zinc-700">
               Leave History - {leaveHistory?.name}
             </Text>
           </View>
-          <Text className="text-zinc-400 text-base">
+          <Text className="text-zinc-500 dark:text-zinc-400 text-base">
             View leave history, see request details, and request new leaves as
             needed.
           </Text>
           <View className="flex-row items-center gap-2 mt-2">
-            <Text className="text-zinc-400 text-sm">Total Leave: </Text>
-            <Text className="text-zinc-200 text-sm">{totalLeave} Leaves</Text>
+            <Text className="text-zinc-500 dark:text-zinc-400 text-sm">Total Leave: </Text>
+            <Text className="text-zinc-500 dark:text-zinc-400 text-sm">{totalLeave} Leaves</Text>
           </View>
         </Card>
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>

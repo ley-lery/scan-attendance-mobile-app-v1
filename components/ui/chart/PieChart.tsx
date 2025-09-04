@@ -1,4 +1,4 @@
-import { Text } from "@/godui";
+import { Text } from "@/components/tag/Text";
 import { useThemeStore } from "@/stores/useThemeStore";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

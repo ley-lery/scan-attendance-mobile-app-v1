@@ -1,8 +1,8 @@
-import { BlurCard } from '@/godui'
+import { BlurCard } from '@/components/ui/card/BlurCard'
 import { Ionicons } from '@expo/vector-icons'
 import { AnimatePresence, MotiView } from 'moti'
 import React, { useState } from 'react'
-import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, ScrollView, Text, TouchableOpacity, View, useColorScheme } from 'react-native'
 
 type PickerOption = {
   label: string
@@ -58,6 +58,7 @@ export const Picker: React.FC<PickerProps> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const selected = options.find(opt => opt.value === value)
+  const theme = useColorScheme()
 
   const handleSelect = (val: string | number) => {
     onChange(val)
@@ -183,7 +184,7 @@ export const Picker: React.FC<PickerProps> = ({
             ].join(" ")} 
             style={{ elevation: 8 }} 
           >
-            <BlurCard radius='lg' placementRadius="all" intensity={60} tint="light">
+            <BlurCard radius='lg' placementRadius="all" intensity={theme === 'dark' ? 50 : 50} tint={theme === 'dark' ? 'light' : 'dark'}>
               <ScrollView style={{ maxHeight: 150 }} nestedScrollEnabled showsVerticalScrollIndicator={false}>
                 {options.map((item) => (
                   <Pressable
@@ -191,19 +192,19 @@ export const Picker: React.FC<PickerProps> = ({
                     onPress={() => handleSelect(item.value)}
                     className={`
                       px-4 py-3 rounded-sm flex-row items-center justify-between
-                      ${item.value === value ? 'dark:bg-zinc-300/10 bg-zinc-400/30' : 'bg-transparent'}
+                      ${item.value === value ? 'dark:bg-zinc-300/10 bg-zinc-300/40' : 'bg-transparent'}
                     `}
                     android_ripple={{ color: '#27272a' }}
                   >
                     <Text
                       className={`text-base ${
-                        item.value === value ? 'dark:text-white text-black font-medium' : 'dark:text-zinc-300 text-zinc-500'
+                        item.value === value ? 'dark:text-white text-white font-medium' : 'dark:text-zinc-300 text-zinc-200'
                       }`}
                     >
                       {item.label}
                     </Text>
                     {item.value === value && (
-                      <Ionicons name="checkmark" size={20} color="#a1a1aa" />
+                      <Ionicons name="checkmark" size={20} color={theme === 'dark' ? '#a1a1aa' : '#fff'} />
                     )}
                   </Pressable>
                 ))}

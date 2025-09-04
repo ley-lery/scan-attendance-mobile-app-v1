@@ -1,6 +1,6 @@
 import { BlurView } from "expo-blur";
 import React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 
 interface Props {
   children: React.ReactNode;
@@ -38,7 +38,8 @@ export const BlurCard = ({
   return (
     <View
       className={[
-        "overflow-hidden  dark:bg-black/30",
+        "overflow-hidden ",
+        Platform.OS === 'ios' ? 'dark:bg-black/30' : 'bg-zinc-50 dark:bg-zinc-900',
         placementRadiusMap[placementRadius],
         classNames?.wrapper,
       ].join(" ")}

@@ -287,6 +287,15 @@
     "sendAMessage": "Send a Message",
     "upcoming": "Upcoming",
     "completed": "Completed",
+    "goodMorning": "Good Morning",
+    "todayLeave": "Today's Leave",
+    "otherLeaves": "Other Leaves",
+    "reject": "Reject",
+    "approve": "Approve",
+    "approveLeave": "Approve Leave",
+    "rejectLeave": "Reject Leave",
+    "gettingAddress": "Getting Address...",
+    "gettingLocation": "Getting your Location...",
     "desc": {
         "viewTodayClasses": "Get an overview of your scheduled classes for today.",
         "contactAdmin": "If you have any problem or question, please contact the admin below.",
@@ -302,7 +311,9 @@
         "attendanceSuccess": "Attendance recorded successfully",
         "scanError": "We couldn't scan your QR code. Please try again or make sure the QR code is readable.",
         "extendedLeaveSubmittedMessage": "Your leave request has been submitted successfully. Below are the details:",
-        "validatingDataDesc": "Connecting to server and validating your data..."
+        "validatingDataDesc": "Connecting to server and validating your data...",
+        "todayLeave": "Student Leave Requests For Today",
+        "otherLeaves": "Pending Student Leave Requests"
     },
     "validation": {
         "required": "This field is required",

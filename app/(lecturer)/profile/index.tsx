@@ -1,17 +1,17 @@
 import i18n from '@/assets/translate/i18n'
-import { IMG } from '@/constants/Image'
-import { Card, Alert as CustomAlert, Loading, useDisclosure } from '@/godui'
+import ButtonSwitch from '@/components/ui/switch-theme/SwitchTheme'
+import { Card, Alert as CustomAlert, Loading, Text, useDisclosure, useHaptic } from '@/godui'
 import { useThemeStore } from '@/stores/useThemeStore'
 import { useUserStore } from '@/stores/userStore'
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused } from '@react-navigation/native'
+import * as Haptics from 'expo-haptics'
 import { router } from 'expo-router'
-import { MotiView } from 'moti'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, SafeAreaView, Text as TextNative, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Language from './langauge'
 import Theme from './theme'
@@ -32,49 +32,41 @@ interface ProfileInfoRowProps {
 }
 
 const ProfileInfoRow = ({ icon, label, value }: ProfileInfoRowProps) => (
-  <View className="flex-row items-center py-2 px-3 bg-zinc-900 rounded-xl mb-2">
-    <View className="p-3 justify-center items-center mr-3 bg-zinc-800 rounded-full">
+  <View className="flex-row items-center py-2 px-3 bg-zinc-100 dark:bg-zinc-900 rounded-lg mb-2">
+    <View className="p-3 justify-center items-center mr-3 bg-white dark:bg-black rounded-md">
       {icon}
     </View>
     <View className="flex-1">
-      <Text className="text-zinc-400 text-xs">{label}</Text>
-      <Text className="text-zinc-200 text-base font-semibold">{value}</Text>
+      <Text className="text-zinc-500 dark:text-zinc-400 text-xs">{label}</Text>
+      <TextNative className="text-zinc-600 dark:text-zinc-200 text-base font-semibold">{value}</TextNative>
     </View>
   </View>
 );
 
-const ProfileAction = ({ icon, iconColor, label, onPress, bg = "bg-zinc-900", textColor = "text-zinc-200" }: ProfileActionProps) => (
+const ProfileAction = ({
+  icon,
+  iconColor,
+  label,
+  onPress,
+}: ProfileActionProps) => (
   <TouchableOpacity
     onPress={onPress}
-    className={`flex-row items-center px-4 py-3 rounded-xl mb-2 ${bg}`}
+    className={`flex-row items-center px-4 py-3 rounded-full dark:bg-zinc-900 bg-zinc-100`}
     activeOpacity={0.8}
   >
     <View className="w-7 h-7 justify-center items-center mr-3">
       {icon}
     </View>
-    <Text className={`${textColor} text-base flex-1`}>{label}</Text>
-    <Ionicons name="chevron-forward" size={18} color={iconColor || "#71717a"} />
+    <Text className="text-zinc-600 dark:text-zinc-200 text-base flex-1">{label}</Text>
+    <Ionicons name="chevron-forward" size={18} color={iconColor || "#a1a1aa"} />
   </TouchableOpacity>
 );
-
-const lecturerData = {
-  first_name: "Vay",
-  last_name: "Sophanno",
-  lecturer_code: "LEC123456",
-  email: "lecturer@email.com",
-  phone: "123-456-7890",
-  office_room: "Room 101",
-  academic_title: "Assistant Professor",
-  department: "Computer Science",
-  years_experience: 5,
-  total_students: 120,
-  total_courses: 10,
-}
 
 const Profile = () => {
   const { t } = useTranslation();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const isFocused = useIsFocused();
+  const { trigger } = useHaptic();
 
   const bottomSheetRef = React.useRef<BottomSheetModal | null>(null);
   const bottomSheetThemeRef = React.useRef<BottomSheetModal | null>(null);
@@ -102,6 +94,11 @@ const Profile = () => {
     fetchUserData().finally(() => setIsLoading(false));
   }, []);
 
+  const handleLogout = () => {
+    trigger(Haptics.ImpactFeedbackStyle.Light);
+    onOpen();
+  };
+
   const logout = async () => {
     try {
       await AsyncStorage.removeItem("token");
@@ -112,6 +109,8 @@ const Profile = () => {
       console.error("Error removing data from AsyncStorage:", error);
     }
   };
+
+  
 
   const handleLanguageChange = async (code: string) => {
     await AsyncStorage.setItem("language", code);
@@ -130,6 +129,7 @@ const Profile = () => {
     }, 1000);
   }, []);
 
+
   if (isLoading) return <Loading isLoading={isLoading} />
 
   return (
@@ -143,28 +143,19 @@ const Profile = () => {
         confirmText={t("yes")}
         cancelText={t("no")}
       />
-      <SafeAreaView className="flex-1 bg-black">
-        {/* Animated background */}
-        <MotiView
-          from={{ opacity: 0, translateY: -50 }}
-          animate={{ opacity: isFocused ? 1 : 0, translateY: isFocused ? 0 : -50 }}
-          transition={{ type: 'timing', duration: 400, delay: 400 }}
-          className="w-full h-full absolute top-0 left-0 z-0"
-        >
-          <Image source={theme === "1" ? IMG.BGP : IMG.BGBP}  />
-        </MotiView>
+      <SafeAreaView className="flex-1 bg-zinc-100 dark:bg-black/95">
         <ScrollView
           className="flex-1"
           contentContainerStyle={{ paddingBottom: 90, paddingTop: 20, paddingHorizontal: 18 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Profile Card */}
-          <Card isFocused={isFocused} animation={{ delay: 100 }} transparent className="mb-4 px-0 py-0 relative">
-            <TouchableOpacity className="absolute right-5 top-5 z-10">
+          <Card animation={{ delay: 100, isFocused: isFocused }} radius='xl' classNames={{wrapper: 'p-4 '}} isShadow>
+            {/* <TouchableOpacity className="absolute right-5 top-5 z-10">
               <Ionicons name="settings-outline" size={22} color="#a1a1aa" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            <View className="flex-row items-center bg-zinc-900/80 rounded-2xl p-5 shadow-lg">
+            <View className="flex-row items-center  rounded-2xl">
               <View className="mr-5">
                 <Image
                   source={{ uri: user?.avatar }}
@@ -176,22 +167,21 @@ const Profile = () => {
                 />
               </View>
               <View className="flex-1">
-                <Text className="text-white text-xl font-bold mb-1">{lecturerData.first_name + " " + lecturerData.last_name}</Text>
-                <View className="flex-row items-center my-1">
-                  <Ionicons name="person-outline" size={16} color="#a1a1aa" />
-                  <Text className="text-zinc-400 text-sm ml-1">{lecturerData.lecturer_code}</Text>
+                <TextNative className="text-zinc-900 dark:text-white text-xl font-bold mb-1">{user?.name}</TextNative>
+                <View className="flex-row items-center mb-1">
+                  <Ionicons name="person-circle-outline" size={16} color="#a1a1aa" />
+                  <TextNative className="text-zinc-400 text-sm ml-1">{user?.user_code}</TextNative>
                 </View>
                 <View className="flex-row items-center">
-                  <Ionicons name="mail-outline" size={16} color="#a1a1aa" />
-                  <Text className="text-zinc-400 text-sm ml-1">{lecturerData.email}</Text>
+                  <MaterialCommunityIcons name="email-outline" size={16} color="#a1a1aa" />
+                  <TextNative className="text-zinc-400 text-sm ml-1">{user?.email || "student@email.com"}</TextNative>
                 </View>
               </View>
             </View>
           </Card>
 
           {/* Info Section */}
-          <Card radius="lg" isFocused={isFocused} animation={{ delay: 150 }} className="mb-4 px-0 py-0">
-            <View className="p-4">
+          <Card radius="lg" animation={{ delay: 150, isFocused: isFocused }} classNames={{wrapper: 'my-4 bg-black'}}>
               <Text className={[
                 "text-xs font-semibold mb-2 uppercase tracking-widest",
                 theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
@@ -200,29 +190,23 @@ const Profile = () => {
               </Text>
               <ProfileInfoRow
                 icon={<Ionicons name="school-outline" size={20} color="#f31260" />}
-                label={t("department")}
-                value={lecturerData.department || t("notAvailable")}
+                label={t("major")}
+                value={user?.major || t("notAvailable")}
               />
               <ProfileInfoRow
-                icon={<Feather name="book-open" size={20} color="#f59e42" />}
-                label={t("academicTitle")}
-                value={lecturerData.academic_title || t("notAvailable")}
-              />
-              <ProfileInfoRow
-                icon={<MaterialCommunityIcons name="office-building-outline" size={20} color="#38bdf8" />}
-                label={t("officeRoom")}
-                value={lecturerData.office_room || t("notAvailable")}
+                icon={<Feather name="calendar" size={20} color="#f59e42" />}
+                label={t("year")}
+                value={user?.year || t("notAvailable")}
               />
               <ProfileInfoRow
                 icon={<Ionicons name="call-outline" size={20} color="#38bdf8" />}
                 label={t("phone")}
-                value={lecturerData.phone || t("notAvailable")}
+                value={user?.phone || t("notAvailable")}
               />
-            </View>
           </Card>
 
           {/* Lecturer Stats */}
-          <Card radius="lg" isFocused={isFocused} animation={{ delay: 200 }} className="mb-4 px-0 py-0">
+          <Card radius="lg" animation={{ delay: 200, isFocused: isFocused }} classNames={{wrapper: 'mb-4'}}>
             <View className="p-4">
               <Text className={[
                 "text-xs font-semibold mb-2 uppercase tracking-widest",
@@ -233,83 +217,84 @@ const Profile = () => {
               <View className="flex-row justify-between items-center py-4">
                 <View className="items-center flex-1">
                   <Ionicons name="people-outline" size={30} color="#38bdf8" />
-                  <Text className="text-zinc-300 text-lg font-bold mt-2">{lecturerData.total_students ?? "--"}</Text>
-                  <Text className="text-zinc-400 text-xs">{t("totalStudents")}</Text>
+                  <Text className="text-zinc-500 dark:text-zinc-400 text-lg font-bold mt-2">{user?.total_students ?? "--"}</Text>
+                  <Text className="text-zinc-500 dark:text-zinc-400 text-xs">{t("totalStudents")}</Text>
                 </View>
                 <View className="items-center flex-1">
                   <Feather name="book" size={28} color="#f59e42" />
-                  <Text className="text-zinc-300 text-lg font-bold mt-2">{lecturerData.total_courses ?? "--"}</Text>
-                  <Text className="text-zinc-400 text-xs">{t("totalCourses")}</Text>
+                  <Text className="text-zinc-500 dark:text-zinc-400 text-lg font-bold mt-2">{user?.total_courses ?? "--"}</Text>
+                  <Text className="text-zinc-500 dark:text-zinc-400 text-xs">{t("totalCourses")}</Text>
                 </View>
                 <View className="items-center flex-1">
                   <MaterialCommunityIcons name="calendar-check-outline" size={30} color="#db2777" />
-                  <Text className="text-zinc-300 text-lg font-bold mt-2">{lecturerData.years_experience ?? "--"}</Text>
-                  <Text className="text-zinc-400 text-xs">{t("yearsExperience")}</Text>
+                  <Text className="text-zinc-500 dark:text-zinc-400 text-lg font-bold mt-2">{user?.years_experience ?? "--"}</Text>
+                  <Text className="text-zinc-500 dark:text-zinc-400 text-xs">{t("yearsExperience")}</Text>
                 </View>
               </View>
             </View>
           </Card>
+         
 
           {/* Account Settings */}
-          <Card radius="lg" isFocused={isFocused} animation={{ delay: 250 }} className="mb-4 px-0 py-0">
-            <View className="p-4">
+          <Card radius="lg" animation={{ delay: 250, isFocused: isFocused }} classNames={{wrapper: 'mb-4 bg-black'}} >
               <Text className={[
                 "text-xs font-semibold mb-2 uppercase tracking-widest",
                 theme === "1" ? "text-theme1-primary" : "text-theme2-primary",
               ].join(" ")}>
                 {t("accountSettings")}
               </Text>
-              <ProfileAction
-                icon={<Ionicons name="key-outline" size={20} color="#f59e42" />}
-                label={t("changePassword")}
-                onPress={() => {}}
-                textColor="text-zinc-400"
-                bg="bg-zinc-900/60"
-              />
-              <ProfileAction
-                icon={<MaterialCommunityIcons name="theme-light-dark" size={24} color={theme === "1" ? "#db2777" : "#006FEE"} />}
-                label={t("changeTheme")}
-                onPress={() => bottomSheetThemeRef.current?.present()}
-                textColor="text-zinc-200"
-                bg="bg-zinc-900/60"
-              />
-              <ProfileAction
-                icon={<Ionicons name="language-outline" size={20} color="#38bdf8" />}
-                label={t("changeLanguage")}
-                onPress={() => bottomSheetRef.current?.present()}
-                textColor="text-zinc-200"
-                bg="bg-zinc-900/60"
-              />
-              <ProfileAction
-                icon={<MaterialCommunityIcons name="account-group-outline" size={24} color="orange" />}
-                label={t("myClasses")}
-                // onPress={() => router.push("/(lecturer)/classes")}
-                textColor="text-zinc-200"
-                bg="bg-zinc-900/60"
-              />
-              <ProfileAction
-                icon={<MaterialCommunityIcons name="email-outline" size={24} color="#a1a1aa" />}
-                label={t("contactAdmin")}
-                onPress={() => router.push("/(lecturer)/profile/contact")}
-                textColor="text-zinc-200"
-                bg="bg-zinc-900/60"
-              />
-              <ProfileAction
-                icon={<Ionicons name="help-circle-outline" size={26} color="#006FEE" />}
-                label={t("faq")}
-                onPress={() => router.push("/(lecturer)/profile/faq")}
-                textColor="text-zinc-200"
-                bg="bg-zinc-900/60"
-              />
-              <ProfileAction
-                icon={<Ionicons name="log-out-outline" size={20} color="#f31260" />}
-                label={t("logout")}
-                onPress={onOpen}
-                textColor="text-danger"
-                bg="bg-danger/10"
-                iconColor="#db2777"
-              />
-            </View>
+              <View className="gap-2">
+                <ProfileAction
+                  icon={<Ionicons name="key-outline" size={20} color="#f59e42" />}
+                  label={t("changePassword")}
+                  onPress={() => {}}
+                  textColor="text-zinc-400"
+                  bg="bg-zinc-900/60"
+                />
+                <View className="flex-row items-center justify-between dark:bg-zinc-900 bg-zinc-100 rounded-full py-2 pl-4 pr-2">
+                  <View className="flex-row items-center gap-4">
+                    <Ionicons name="moon-outline" size={20} color="#a1a1aa" />
+                    <Text className="text-zinc-600 dark:text-zinc-200 text-base">{t("darkMode")}</Text>
+                  </View>
+                  <ButtonSwitch />
+                </View>
+                <ProfileAction
+                  icon={<MaterialCommunityIcons name="theme-light-dark" size={24} color={theme === "1" ? "#db2777" : "#006FEE"} />}
+                  label={t("changeTheme")}
+                  onPress={() => bottomSheetThemeRef.current?.present()}
+                  textColor="text-zinc-200"
+                  bg="bg-zinc-900/60"
+                />
+                <ProfileAction
+                  icon={<Ionicons name="language-outline" size={20} color="#38bdf8" />}
+                  label={t("changeLanguage")}
+                  onPress={() => bottomSheetRef.current?.present()}
+                  textColor="text-zinc-200"
+                  bg="bg-zinc-900/60"
+                />
+                <ProfileAction
+                  icon={<Ionicons name="person-circle-outline" size={24} color="#a1a1aa" />}
+                  label={t("contactAdmin")}
+                  onPress={() => router.push("../../student-stack/profile/contact")}
+                  textColor="text-zinc-200"
+                  bg="bg-zinc-900/60"
+                />
+                <ProfileAction
+                  icon={<Ionicons name="help-circle-outline" size={26} color="#006FEE" />}
+                  label={t("faq")}
+                  onPress={() => router.push("../../student-stack/profile/faq")}
+                  textColor="text-zinc-200"
+                  bg="bg-zinc-900/60"
+                  />
+                <ProfileAction
+                  icon={<Ionicons name="log-out-outline" size={20} color="#f31260" />}
+                  label={t("logout")}
+                  onPress={handleLogout}
+                  textColor="text-danger"
+                  bg="bg-danger/10"
+                  iconColor="#db2777"
+                />
+              </View>
           </Card>
         </ScrollView>
       </SafeAreaView>

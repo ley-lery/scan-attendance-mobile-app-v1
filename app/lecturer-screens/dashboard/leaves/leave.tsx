@@ -12,19 +12,6 @@ import * as Yup from 'yup';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const SOUND_CONFIG = {
-  success: {
-      file: require("../../assets/sounds/success-chime.mp3"),
-      volume: 0.8,
-      description: "Success chime for attendance recorded"
-  },
-  failed: {
-      file: require("../../assets/sounds/error-beep.mp3"),
-      volume: 0.5,
-      description: "Error buzz for failed scans"
-  },
-};
-
 const subjects = [
   { label: 'Frontend Development', value: 'frontend' },
   { label: 'Backend Development', value: 'backend' },
@@ -199,9 +186,9 @@ const SingleLeave = () => {
       <View className="flex-1 min-h-screen">
         {/* =========== Enhanced Form Section =========== */}
         <MotiView
-          from={{ opacity: 0, scale: 1, translateX: 0 }}
-          animate={{ opacity: success ? 0 : 1, scale: success ? 0.95 : 1, translateX: success ? -SCREEN_WIDTH * 0.1 : 0 }}
-          transition={{ type: "spring", damping: 15, stiffness: 150 }}
+          from={{ opacity: 0, scale: submitting ? 0.95 : 1, translateX: 0 }}
+          animate={{ opacity: success ? 0 : 1, scale: success || submitting ? 0.95 : 1, translateX: success ? -SCREEN_WIDTH * 0.1 : 0 }}
+          transition={{ type: "timing", duration: 600 }}
           pointerEvents={success ? "none" : "auto"}
           style={{ flex: 1 }}
           className="justify-center p-4"

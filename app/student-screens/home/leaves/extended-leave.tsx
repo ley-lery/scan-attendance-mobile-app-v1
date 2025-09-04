@@ -1,4 +1,4 @@
-import { Button, DatePicker, Icon, Input, Picker, Text, useHaptic, useToast } from "@/godui";
+import { Button, CircleLoading, DatePicker, Icon, Input, Picker, Text, useHaptic, useToast } from "@/godui";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from 'expo-haptics';
 import { Formik } from "formik";
@@ -12,18 +12,7 @@ import * as Yup from 'yup';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const SOUND_CONFIG = {
-  success: {
-      file: require("../../assets/sounds/success-chime.mp3"),
-      volume: 0.8,
-      description: "Success chime for leave request submitted"
-  },
-  failed: {
-      file: require("../../assets/sounds/error-beep.mp3"),
-      volume: 0.5,
-      description: "Error buzz for failed submissions"
-  },
-};
+
 
 const initialValues = {
   leaveType: '',
@@ -142,7 +131,7 @@ const ExtendedLeave = () => {
       // Success feedback
       setTimeout(() => {
         setIsSuccess(true);
-      }, 600);
+      }, 2000);
       trigger(Haptics.ImpactFeedbackStyle.Heavy);
       
       show({ title: t('leaveRequest'), message: t('extendedLeaveSubmittedMessage'), type: 'success' });
@@ -209,9 +198,9 @@ const ExtendedLeave = () => {
         <View className="flex-1 min-h-screen">
           {/* =========== Enhanced Form Section =========== */}
           <MotiView
-            from={{ opacity: 0, scale: 1, translateX: 0 }}
-            animate={{ opacity: success ? 0 : 1, scale: success ? 0.95 : 1, translateX: success ? -SCREEN_WIDTH * 0.1 : 0 }}
-            transition={{ type: "spring", damping: 15, stiffness: 150 }}
+            from={{ opacity: 0, scale: submitting ? 0.95 : 1, translateX: 0 }}
+            animate={{ opacity: success ? 0 : 1, scale: success || submitting ? 0.95 : 1, translateX: success ? -SCREEN_WIDTH * 0.1 : 0 }}
+            transition={{ type: "timing", duration: 600 }}
             pointerEvents={success ? "none" : "auto"}
             style={{ flex: 1 }}
             className="justify-center p-4"
@@ -427,8 +416,8 @@ const ExtendedLeave = () => {
           <View className="bg-white dark:bg-zinc-800 rounded-3xl p-4 shadow-2xl shadow-zinc-300 dark:shadow-black items-center">
             {submittedData && (
               <>
-                <MotiView from={{ scale: 0, rotateZ: '10deg' }} animate={{ scale: 1, rotateZ: '0deg' }} transition={{ type: "spring", damping: 12, stiffness: 200, delay: 1000 }} className="bg-green-100 dark:bg-black shadow-black shadow-lg dark:shadow-black/50 rounded-2xl p-6 mb-4">
-                  <Icon name="checkmark-done" size={24} />
+                <MotiView from={{ scale: 0, rotateZ: '10deg' }} animate={{ scale: 1, rotateZ: '0deg' }} transition={{ type: "spring", damping: 12, stiffness: 200, delay: 1000 }} className="bg-white dark:bg-black  shadow-lg shadow-zinc-200/50 dark:shadow-black/50 rounded-2xl p-4 mb-4">
+                  <CircleLoading isLoading={submitting} isSuccess={isSuccess} isFailed={!isSuccess} size={50} />
                 </MotiView>
 
                 <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: success ? 1100 : 0, type: "spring", damping: 20, stiffness: 200 }}>

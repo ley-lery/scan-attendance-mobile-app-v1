@@ -53,7 +53,7 @@ export const Card = ({
         className={[
           'p-4 ',
           transparent ? 'bg-transparent ' : 'bg-white dark:bg-black ',
-          isShadow && "shadow-lg shadow-white dark:shadow-black",
+          isShadow && "shadow-lg shadow-zinc-200/50 dark:shadow-black/50",
           radiusMap[radius],
           classNames?.wrapper,
         ].join(' ')

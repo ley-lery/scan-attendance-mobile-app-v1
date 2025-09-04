@@ -1,4 +1,4 @@
-import { BlurCard } from '@/godui'
+import { BlurCard } from '@/components/ui/card/BlurCard'
 import { Ionicons } from '@expo/vector-icons'
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { AnimatePresence, MotiView } from 'moti'

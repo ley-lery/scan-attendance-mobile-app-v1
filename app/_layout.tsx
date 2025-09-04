@@ -1,7 +1,6 @@
 import "@/assets/styles/global.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
-import soundManager from "@/utils/soundManager";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Asset } from "expo-asset";
@@ -48,11 +47,13 @@ function AppContent() {
           require("../assets/background/bg-blue-profile.png"),
           require("../assets/background/bg-blue-gd-auth.png"),
           require("../assets/background/bg-blue-history-attendance.png"),
+          require("../assets/flags/cambodia-flag.jpg"),
+          require("../assets/flags/english-flag.jpg"),
         ];
         await Asset.loadAsync(images);
 
         // Load sounds
-        soundManager.preloadSounds();
+        // soundManager.preloadSounds();
 
         // Load language preference
         const lang = await AsyncStorage.getItem("language");

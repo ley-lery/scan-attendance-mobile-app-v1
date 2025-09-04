@@ -1,3 +1,4 @@
+import CardLongPress from '@/components/ui/long-press/CardLongPress'
 import { Badge, BlurCard, Card, Icon, Loading, Notification, Text, Typography, useDisclosure, useHaptic } from '@/godui'
 import { useUserStore } from '@/stores/userStore'
 import { useThemeStore } from '@/stores/useThemeStore'
@@ -8,7 +9,7 @@ import { router } from 'expo-router'
 import { MotiView } from 'moti'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Clipboard, Image, Platform, ScrollView, Text as TextNative, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { Clipboard, Image, Platform, SafeAreaView, ScrollView, Text as TextNative, TouchableOpacity, useColorScheme, View } from 'react-native'
 import GetLocation from '../location/get-location'
 
 
@@ -42,7 +43,7 @@ interface InfoCardProps{
   label: string,
 }
 
-const InfoCard = ({ title,subtitle,time,room,status,statusColor,isFocused,delay,label }: InfoCardProps) => (
+const InfoCard = ({ title,time,room,status,statusColor,isFocused,delay,label }: InfoCardProps) => (
   <MotiView
     from={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
@@ -50,7 +51,7 @@ const InfoCard = ({ title,subtitle,time,room,status,statusColor,isFocused,delay,
   >
     <Text className="text-zinc-500 dark:text-zinc-400 font-medium text-sm mb-1">{label}</Text>
     <Card radius="xl" classNames={{ content: 'flex-row items-center justify-between ' }}>
-      <View className='flex-1 gap-1'>
+      <View className='flex-1 gap-1'> 
         <TextNative className="text-zinc-600 dark:text-zinc-200 font-semibold text-base mb-1">{title}</TextNative>
         <TextNative className="text-zinc-500 dark:text-zinc-400 text-sm">{time} → {room}</TextNative>
       </View>
@@ -62,6 +63,17 @@ const InfoCard = ({ title,subtitle,time,room,status,statusColor,isFocused,delay,
   </MotiView>
 )
 
+const cardData = [
+  {
+    id: 1,
+    title: 'Web developer Senior',
+    subtitle: 'Today class',
+    content: 'Please join the class at 10:00 AM',
+    time: '2 min ago',
+    status: 'Upcoming',
+    statusColor: '#fbbf24',
+  },
+]
 
 
 const Home = () => {
@@ -92,9 +104,9 @@ const Home = () => {
   )
 
   const cardTodayOverviewList = [
-    { icon: 'people', title: t('leaveSingleDay'), subtitle: t('requestLeaveForToday'), navigate: '../../leaves/leave' },
-    { icon: 'calendar-outline', title: t('extendedLeave'), subtitle: t('requestLeaveForMultipleDays'), navigate: '../../leaves/extended-leave' },
-    { icon: 'list', title: t('leaveHistory'), subtitle: t('desc.viewYourLeaveHistory'), navigate: '../../leaves/class' },
+    { icon: 'people', title: t('leaveSingleDay'), subtitle: t('requestLeaveForToday'), navigate: '../../student-screens/home/leaves/leave' },
+    { icon: 'calendar-outline', title: t('extendedLeave'), subtitle: t('requestLeaveForMultipleDays'), navigate: '../../student-screens/home/leaves/extended-leave' },
+    { icon: 'list', title: t('leaveHistory'), subtitle: t('desc.viewYourLeaveHistory'), navigate: '../../student-screens/home/leaves/class' },
   ]
 
   useEffect(() => {
@@ -161,7 +173,13 @@ const Home = () => {
         {notiData.map((notif) => notificationsRows(notif))}
       </View>
     </Notification>
-      <View className='flex-1 bg-zinc-50 dark:bg-zinc-900'>
+    <SafeAreaView className='flex-1 bg-zinc-50 dark:bg-zinc-900'>
+      <MotiView
+        from={{ opacity: 0, scale: isFocused ? 1 : 0.98 }}
+        animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.98 }}
+        transition={{ type: 'timing', duration: 200, delay: 0 }}
+        className='flex-1 bg-zinc-50 dark:bg-zinc-900'
+      >
         <MotiView
           from={{ opacity: 0, translateY: -10 }}
           animate={{ opacity: 1, translateY: 0 }}
@@ -199,7 +217,7 @@ const Home = () => {
               <TouchableOpacity onPress={() => {trigger(); onOpen()}}>
                 <MotiView
                   from={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ type: 'timing', duration: 200, delay: 100 }}
                 >
                   <Badge variant="solid" color="primary" content={1} >
@@ -210,11 +228,11 @@ const Home = () => {
             </View>
           </BlurCard>
         </MotiView>
-        <ScrollView className="flex-1" contentContainerStyle={{ paddingTop: 110, paddingBottom: 10 }} showsVerticalScrollIndicator={false}>
+        <ScrollView className="flex-1" contentContainerStyle={{ paddingTop: 110, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
           <View className='p-4 py-10'>
             <MotiView
               from={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ type: 'timing', duration: 200, delay: 100 }}
             >
               <SectionGradientCard>
@@ -233,7 +251,7 @@ const Home = () => {
               </SectionGradientCard>
             </MotiView>
 
-            <Card radius="xl" classNames={{ wrapper: 'mt-4' }} animation={{ type: 'timing', duration: 300, delay: 120, isFocused }}>
+            <Card radius="xl" classNames={{ wrapper: 'mt-4' }} animation={{ type: 'timing', duration: 300, delay: 120, isFocused: true }}>
               <View className='flex-row items-end justify-between  gap-4'>
                 <View className='flex-1'>
                   <Text className="text-zinc-600 dark:text-zinc-300 font-semibold text-base mb-1">{t('viewTodayClasses')}</Text>
@@ -255,13 +273,16 @@ const Home = () => {
                 room="Room C-101"
                 status="Upcoming"
                 statusColor="#f5a524"
-                isFocused={isFocused}
+                isFocused={true}
                 delay={300}
                 label={t('todayClass')}
               />
             </View>
-
-            <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: isFocused ? 1 : 0, scale: isFocused ? 1 : 0.9 }} transition={{ type: 'timing', duration: 200, delay: 200 }} style={{ marginTop: 10 ,paddingBottom: 70 }}>
+            
+            <View className='mt-4'>
+              <CardLongPress cardData={cardData} />
+            </View>
+            <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'timing', duration: 200, delay: 200 }} className='mt-4'>
               <Text className="text-zinc-400 font-medium text-sm mb-1">{t('leaves')}</Text>
               <View className="gap-2 mb-6">
                 {cardTodayOverviewList.map((item, index) => (
@@ -271,14 +292,15 @@ const Home = () => {
                     title={item.title}
                     subtitle={item.subtitle}
                     navigate={item.navigate}
-                    isFocused={isFocused}
+                    isFocused={true}
                   />
                 ))}
               </View>
             </MotiView>
           </View>
         </ScrollView>
-      </View>
+      </MotiView>
+    </SafeAreaView>
       {Platform.OS === "web" ? (
           <View className="flex-1 items-center justify-center">
               <Text className="text-gray-500 dark:text-gray-300 text-base">

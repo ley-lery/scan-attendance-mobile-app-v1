@@ -19,7 +19,7 @@ const DEFAULTS = {
   type: "info" as const,
   title: "",
   message: "",
-  duration: 3000,
+  duration: 3500,
   position: "top" as const,
 };
 
@@ -44,12 +44,12 @@ export const ToastProvider: React.FC<React.PropsWithChildren<{ maxVisible?: numb
 
   const scheduleAutoDismiss = useCallback((toast: ToastInternal) => {
     if (toast.duration <= 0) return;
-    const timer = setTimeout(() => dismiss(toast.id), toast.duration);
+    const timer: any = setTimeout(() => dismiss(toast.id), toast.duration);
     timers.current.set(toast.id, timer);
   }, [dismiss]);
 
   const show: ShowFn = useCallback((opts) => {
-    const normalized: ToastInternal = (() => {
+    const normalized: any = (() => {
       if (typeof opts === "string") {
         return { id: genId(), ...DEFAULTS, message: opts, createdAt: Date.now() };
       }

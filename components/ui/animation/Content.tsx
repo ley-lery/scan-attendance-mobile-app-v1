@@ -1,4 +1,4 @@
-import { Card } from '@/godui'
+import { Card } from '@/components/ui/card/Card'
 import { useIsFocused } from '@react-navigation/native'
 import { MotiView } from 'moti'
 import React from 'react'

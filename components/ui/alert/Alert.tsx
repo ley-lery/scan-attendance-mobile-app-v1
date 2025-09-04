@@ -1,4 +1,5 @@
-import { BlurCard, Button } from "@/godui";
+import { Button } from "@/components/ui/button/Button";
+import { BlurCard } from "@/components/ui/card/BlurCard";
 import { MotiView } from 'moti';
 import React from 'react';
 import { Dimensions, Modal, Text, useColorScheme, View } from 'react-native';
@@ -43,15 +44,8 @@ export const Alert: React.FC<AlertProps> = ({
           exit={{ scale: 0.7, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 12 }}
           className="w-[90%] max-w-md  rounded-3xl px-7 py-8 shadow-2xl items-center"
-          style={{
-            elevation: 10,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.18,
-            shadowRadius: 16,
-          }}
         >
-          <BlurCard  intensity={60} tint={colorScheme === 'dark' ? 'light' : 'light'} radius="xl" classNames={{wrapper: ' w-full'}}>
+          <BlurCard  intensity={100} tint={colorScheme === 'dark' ? 'light' : 'dark'} radius="xl" classNames={{wrapper: ' w-full'}}>
             <View className="items-center w-full">
               {icon}
               <Text className="text-lg font-semibold text-center mb-2 text-zinc-200 mt-1">{title}</Text>

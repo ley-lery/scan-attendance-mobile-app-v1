@@ -5,7 +5,7 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useCallback, useState } from 'react';
-import { LayoutChangeEvent, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { LayoutChangeEvent, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import TabButton from './TabButton';
 
 type TabBarProps = BottomTabBarProps & { tab: 'student' | 'lecturer' };
@@ -83,11 +83,23 @@ const TabBar = ({ state, descriptors, navigation, tab }: TabBarProps) => {
   }, [state.index, dimensions.width, dimensions.height, descriptors, navigation, tab]);
 
   return (
-    <BlurView intensity={100} tint="default" className="absolute bottom-0 left-0 right-0 h-[5rem]">
-      <View onLayout={onTabbarLayout} className="flex-row items-center justify-between mt-2">
-        {state.routes.map(renderTabButton)}
-      </View>
-    </BlurView>
+    <>
+      {
+        Platform.OS === 'ios' ? (
+          <BlurView intensity={100} tint="default" className="absolute bottom-0 left-0 right-0 h-[5rem]">
+            <View onLayout={onTabbarLayout} className="flex-row items-center justify-between mt-2">
+              {state.routes.map(renderTabButton)}
+            </View>
+          </BlurView>
+        ) : (
+          <View onLayout={onTabbarLayout} className="absolute bottom-0 left-0 right-0 h-[5rem]">
+            <View onLayout={onTabbarLayout} className="flex-row items-center justify-between mt-2">
+              {state.routes.map(renderTabButton)}
+            </View>
+          </View>
+        )
+      }
+    </>
   );
 };
 

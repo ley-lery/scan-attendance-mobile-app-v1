@@ -4,9 +4,7 @@ import React from 'react'
 const ProfileLayout = () => {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{headerShown: false}} />
-      <Stack.Screen name="contact" options={{headerShown: false}} />
-      <Stack.Screen name="faq" options={{headerShown: false}} />
+      <Stack.Screen name="index" options={{headerShown: false, animation: 'fade_from_bottom'}} />
     </Stack>
   )
 }
